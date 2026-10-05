@@ -1,0 +1,48 @@
+> tsx packages/sim/src/sim.ts --games 1000 --json docs/balance_20261004-232803-0500.json
+
+ABYSS balance: 30,000 games (1000 per monster x squad x objective) in 5.9s
+
+Overall Hunter wins 50.6% | draws 0.0% | median 5 rounds
+Fight 49.7% | Flight 51.5%
+Squads  3: 55.7%  4: 48.1%  5: 48.0%
+Monsters Revenant 54.6% | Hive Queen 48.5% | Chronophage 52.3% | Greed Maw 49.6% | Abyssal Harbinger 48.0%
+Classes (Hunter win rate with / without) Vanguard 60.6%/32.8% | Arcblade 44.5%/61.5% | Riftweaver 49.4%/52.8% | Lifebinder 48.5%/54.3% | Chrono Stalker 49.4%/52.7%
+Blowouts: flawless Hunter wins 11.4%, near-flawless Monster wins 2.1%
+Matchups: 33.7% - 63.1%; 26 of 30 inside 40-60%
+
+monster            sq obj     Hunt%   Mon%  Draw%  rnds
+Revenant            3 fight    59.9   40.1    0.0     4
+Revenant            3 flight   58.9   41.1    0.0     5
+Revenant            4 fight    49.0   51.0    0.0     4
+Revenant            4 flight   52.5   47.5    0.0     5
+Revenant            5 fight    52.4   47.6    0.0     4
+Revenant            5 flight   55.2   44.8    0.0     4
+Hive Queen          3 fight    57.7   42.3    0.0     5
+Hive Queen          3 flight   43.6   56.4    0.0     6
+Hive Queen          4 fight    54.3   45.7    0.0     5
+Hive Queen          4 flight   41.3   58.7    0.0     5
+Hive Queen          5 fight    48.5   51.5    0.0     4
+Hive Queen          5 flight   45.8   54.2    0.0     5
+Chronophage         3 fight    59.9   40.1    0.0     6
+Chronophage         3 flight   60.6   39.4    0.0     8
+Chronophage         4 fight    52.3   47.7    0.0   5.5
+Chronophage         4 flight   49.2   50.8    0.0     6
+Chronophage         5 fight    45.6   54.4    0.0     5
+Chronophage         5 flight   46.0   54.0    0.0     6
+Greed Maw           3 fight    51.3   48.7    0.0     6
+Greed Maw           3 flight   52.5   47.5    0.0     7
+Greed Maw           4 fight    48.8   51.2    0.0     5
+Greed Maw           4 flight   48.2   51.8    0.0     5
+Greed Maw           5 fight    45.6   54.4    0.0     4
+Greed Maw           5 flight   51.2   48.8    0.0     5
+Abyssal Harbinger   3 fight    49.6   50.4    0.0     6
+Abyssal Harbinger   3 flight   63.1   36.9    0.0     6
+Abyssal Harbinger   4 fight    33.7   66.3    0.0     5
+Abyssal Harbinger   4 flight   51.9   48.1    0.0     6
+Abyssal Harbinger   5 fight    37.1   62.9    0.0     5
+Abyssal Harbinger   5 flight   52.9   47.1    0.0     5
+
+PASS  Overall Hunter win rate 40-60%: 50.6%
+PASS  Every monster 40-60%: 48.0% - 54.6%
+PASS  Draws 15% or less: 0.0%
+PASS  Every game finishes: 30000 of 30000

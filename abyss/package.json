@@ -1,0 +1,27 @@
+{
+  "name": "abyss-online",
+  "private": true,
+  "description": "ABYSS Online: asymmetric hunters-vs-monster skirmish (MKM).",
+  "type": "module",
+  "workspaces": [
+    "packages/engine",
+    "packages/sim",
+    "packages/server",
+    "packages/client"
+  ],
+  "scripts": {
+    "typecheck": "tsc -p packages/engine && tsc -p packages/sim && tsc -p packages/server && tsc -p packages/client",
+    "test": "vitest run",
+    "sim": "tsx packages/sim/src/sim.ts",
+    "sim:quick": "tsx packages/sim/src/sim.ts --games 200",
+    "build": "npm run build -w packages/client",
+    "start": "tsx packages/server/src/main.ts",
+    "dev": "npm run build && npm run start"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}

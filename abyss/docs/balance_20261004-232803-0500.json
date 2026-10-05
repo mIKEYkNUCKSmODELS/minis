@@ -1,0 +1,683 @@
+{
+  "gamesPerCell": 1000,
+  "totalGames": 30000,
+  "seconds": 5.927201745,
+  "rows": [
+    {
+      "monster": "revenant",
+      "squad": 3,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 599,
+      "monsterWins": 401,
+      "draws": 0,
+      "flawless": 217,
+      "nearFlawless": 18,
+      "stats": {
+        "hunterDowns": 2595,
+        "hunterHits": 17795,
+        "revives": 1058,
+        "scans": 264,
+        "revealsByScan": 27,
+        "suddenDeathRounds": 1
+      },
+      "medianRounds": 4
+    },
+    {
+      "monster": "revenant",
+      "squad": 3,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 589,
+      "monsterWins": 411,
+      "draws": 0,
+      "flawless": 227,
+      "nearFlawless": 39,
+      "stats": {
+        "hunterDowns": 2721,
+        "hunterHits": 16424,
+        "heartsCleansed": 807,
+        "revives": 1159,
+        "surviveWins": 5
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "revenant",
+      "squad": 4,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 490,
+      "monsterWins": 510,
+      "draws": 0,
+      "flawless": 58,
+      "nearFlawless": 10,
+      "stats": {
+        "scans": 310,
+        "hunterHits": 17460,
+        "hunterDowns": 4366,
+        "revives": 1796,
+        "revealsByScan": 21
+      },
+      "medianRounds": 4
+    },
+    {
+      "monster": "revenant",
+      "squad": 4,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 525,
+      "monsterWins": 475,
+      "draws": 0,
+      "flawless": 85,
+      "nearFlawless": 41,
+      "stats": {
+        "hunterHits": 16242,
+        "heartsCleansed": 741,
+        "hunterDowns": 4238,
+        "revives": 1801
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "revenant",
+      "squad": 5,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 524,
+      "monsterWins": 476,
+      "draws": 0,
+      "flawless": 16,
+      "nearFlawless": 19,
+      "stats": {
+        "scans": 320,
+        "hunterDowns": 5568,
+        "hunterHits": 17528,
+        "revives": 2347,
+        "revealsByScan": 11
+      },
+      "medianRounds": 4
+    },
+    {
+      "monster": "revenant",
+      "squad": 5,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 552,
+      "monsterWins": 448,
+      "draws": 0,
+      "flawless": 30,
+      "nearFlawless": 34,
+      "stats": {
+        "hunterDowns": 5342,
+        "revives": 2279,
+        "hunterHits": 16979,
+        "heartsCleansed": 582
+      },
+      "medianRounds": 4
+    },
+    {
+      "monster": "hiveQueen",
+      "squad": 3,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 577,
+      "monsterWins": 423,
+      "draws": 0,
+      "flawless": 151,
+      "nearFlawless": 2,
+      "stats": {
+        "scans": 1294,
+        "revealsByScan": 1005,
+        "hunterHits": 22082,
+        "hunterDowns": 2853,
+        "revives": 1212,
+        "bloodlust": 27,
+        "suddenDeathRounds": 10
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "hiveQueen",
+      "squad": 3,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 436,
+      "monsterWins": 564,
+      "draws": 0,
+      "flawless": 140,
+      "nearFlawless": 43,
+      "stats": {
+        "heartsCleansed": 1736,
+        "hunterHits": 14686,
+        "hunterDowns": 3231,
+        "revives": 1246,
+        "bloodlust": 44,
+        "surviveWins": 16
+      },
+      "medianRounds": 6
+    },
+    {
+      "monster": "hiveQueen",
+      "squad": 4,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 543,
+      "monsterWins": 457,
+      "draws": 0,
+      "flawless": 97,
+      "nearFlawless": 2,
+      "stats": {
+        "scans": 936,
+        "revealsByScan": 660,
+        "hunterHits": 21806,
+        "hunterDowns": 4128,
+        "revives": 1801
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "hiveQueen",
+      "squad": 4,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 413,
+      "monsterWins": 587,
+      "draws": 0,
+      "flawless": 71,
+      "nearFlawless": 40,
+      "stats": {
+        "heartsCleansed": 1507,
+        "hunterDowns": 4574,
+        "hunterHits": 15286,
+        "revives": 1876,
+        "bloodlust": 4,
+        "surviveWins": 1
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "hiveQueen",
+      "squad": 5,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 485,
+      "monsterWins": 515,
+      "draws": 0,
+      "flawless": 35,
+      "nearFlawless": 4,
+      "stats": {
+        "scans": 334,
+        "hunterHits": 20911,
+        "hunterDowns": 5745,
+        "revives": 2505
+      },
+      "medianRounds": 4
+    },
+    {
+      "monster": "hiveQueen",
+      "squad": 5,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 458,
+      "monsterWins": 542,
+      "draws": 0,
+      "flawless": 41,
+      "nearFlawless": 23,
+      "stats": {
+        "hunterDowns": 5807,
+        "revives": 2518,
+        "heartsCleansed": 835,
+        "hunterHits": 18685
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "chronophage",
+      "squad": 3,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 599,
+      "monsterWins": 401,
+      "draws": 0,
+      "flawless": 185,
+      "nearFlawless": 5,
+      "stats": {
+        "scans": 1306,
+        "revealsByScan": 1001,
+        "hunterHits": 20008,
+        "hunterDowns": 2655,
+        "revives": 1099,
+        "suddenDeathRounds": 170,
+        "bloodlust": 8,
+        "corruptionWins": 1
+      },
+      "medianRounds": 6
+    },
+    {
+      "monster": "chronophage",
+      "squad": 3,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 606,
+      "monsterWins": 394,
+      "draws": 0,
+      "flawless": 152,
+      "nearFlawless": 19,
+      "stats": {
+        "hunterHits": 16636,
+        "heartsCleansed": 1345,
+        "hunterDowns": 2799,
+        "revives": 1154,
+        "surviveWins": 205,
+        "bloodlust": 14
+      },
+      "medianRounds": 8
+    },
+    {
+      "monster": "chronophage",
+      "squad": 4,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 523,
+      "monsterWins": 477,
+      "draws": 0,
+      "flawless": 80,
+      "nearFlawless": 7,
+      "stats": {
+        "hunterDowns": 4248,
+        "revives": 1809,
+        "hunterHits": 19383,
+        "scans": 584,
+        "revealsByScan": 289,
+        "suddenDeathRounds": 18
+      },
+      "medianRounds": 5.5
+    },
+    {
+      "monster": "chronophage",
+      "squad": 4,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 492,
+      "monsterWins": 508,
+      "draws": 0,
+      "flawless": 68,
+      "nearFlawless": 16,
+      "stats": {
+        "heartsCleansed": 1051,
+        "hunterHits": 17435,
+        "hunterDowns": 4402,
+        "revives": 1822,
+        "surviveWins": 34
+      },
+      "medianRounds": 6
+    },
+    {
+      "monster": "chronophage",
+      "squad": 5,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 456,
+      "monsterWins": 544,
+      "draws": 0,
+      "flawless": 29,
+      "nearFlawless": 9,
+      "stats": {
+        "scans": 376,
+        "hunterHits": 18680,
+        "hunterDowns": 5951,
+        "revives": 2519,
+        "revealsByScan": 42,
+        "suddenDeathRounds": 1
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "chronophage",
+      "squad": 5,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 460,
+      "monsterWins": 540,
+      "draws": 0,
+      "flawless": 33,
+      "nearFlawless": 10,
+      "stats": {
+        "hunterDowns": 5886,
+        "revives": 2500,
+        "heartsCleansed": 774,
+        "hunterHits": 17836,
+        "surviveWins": 1
+      },
+      "medianRounds": 6
+    },
+    {
+      "monster": "greedMaw",
+      "squad": 3,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 513,
+      "monsterWins": 487,
+      "draws": 0,
+      "flawless": 248,
+      "nearFlawless": 20,
+      "stats": {
+        "scans": 936,
+        "revealsByScan": 701,
+        "hunterHits": 22084,
+        "cocoons": 1792,
+        "rescues": 1299,
+        "hunterDowns": 2208,
+        "revives": 1037,
+        "cocoonDeaths": 65,
+        "suddenDeathRounds": 91
+      },
+      "medianRounds": 6
+    },
+    {
+      "monster": "greedMaw",
+      "squad": 3,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 525,
+      "monsterWins": 475,
+      "draws": 0,
+      "flawless": 231,
+      "nearFlawless": 57,
+      "stats": {
+        "heartsCleansed": 1585,
+        "hunterHits": 16894,
+        "cocoons": 2067,
+        "rescues": 1573,
+        "hunterDowns": 2304,
+        "revives": 1046,
+        "surviveWins": 106,
+        "cocoonDeaths": 76,
+        "bloodlust": 32
+      },
+      "medianRounds": 7
+    },
+    {
+      "monster": "greedMaw",
+      "squad": 4,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 488,
+      "monsterWins": 512,
+      "draws": 0,
+      "flawless": 143,
+      "nearFlawless": 20,
+      "stats": {
+        "hunterHits": 21609,
+        "cocoons": 2002,
+        "rescues": 1531,
+        "hunterDowns": 3561,
+        "revives": 1625,
+        "scans": 313,
+        "cocoonDeaths": 64,
+        "suddenDeathRounds": 20,
+        "revealsByScan": 2
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "greedMaw",
+      "squad": 4,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 482,
+      "monsterWins": 518,
+      "draws": 0,
+      "flawless": 176,
+      "nearFlawless": 60,
+      "stats": {
+        "hunterHits": 19390,
+        "hunterDowns": 3475,
+        "revives": 1599,
+        "cocoons": 2133,
+        "rescues": 1638,
+        "heartsCleansed": 853,
+        "surviveWins": 14,
+        "cocoonDeaths": 75
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "greedMaw",
+      "squad": 5,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 456,
+      "monsterWins": 544,
+      "draws": 0,
+      "flawless": 105,
+      "nearFlawless": 22,
+      "stats": {
+        "scans": 331,
+        "hunterHits": 20700,
+        "cocoons": 2024,
+        "rescues": 1410,
+        "hunterDowns": 4683,
+        "revives": 2101,
+        "cocoonDeaths": 127,
+        "revealsByScan": 3,
+        "suddenDeathRounds": 1
+      },
+      "medianRounds": 4
+    },
+    {
+      "monster": "greedMaw",
+      "squad": 5,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 512,
+      "monsterWins": 488,
+      "draws": 0,
+      "flawless": 131,
+      "nearFlawless": 63,
+      "stats": {
+        "cocoons": 2174,
+        "hunterHits": 20007,
+        "rescues": 1617,
+        "heartsCleansed": 645,
+        "hunterDowns": 4378,
+        "revives": 1997,
+        "cocoonDeaths": 115,
+        "surviveWins": 1
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "harbinger",
+      "squad": 3,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 496,
+      "monsterWins": 504,
+      "draws": 0,
+      "flawless": 164,
+      "nearFlawless": 8,
+      "stats": {
+        "hunterHits": 18770,
+        "hunterDowns": 3015,
+        "revives": 1180,
+        "scans": 261,
+        "suddenDeathRounds": 63,
+        "revealsByScan": 7
+      },
+      "medianRounds": 6
+    },
+    {
+      "monster": "harbinger",
+      "squad": 3,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 631,
+      "monsterWins": 369,
+      "draws": 0,
+      "flawless": 293,
+      "nearFlawless": 5,
+      "stats": {
+        "hunterHits": 19465,
+        "heartsCleansed": 762,
+        "hunterDowns": 2341,
+        "revives": 918,
+        "surviveWins": 26
+      },
+      "medianRounds": 6
+    },
+    {
+      "monster": "harbinger",
+      "squad": 4,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 337,
+      "monsterWins": 663,
+      "draws": 0,
+      "flawless": 50,
+      "nearFlawless": 8,
+      "stats": {
+        "scans": 323,
+        "hunterDowns": 5015,
+        "revives": 1972,
+        "hunterHits": 16988,
+        "revealsByScan": 24,
+        "suddenDeathRounds": 12
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "harbinger",
+      "squad": 4,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 519,
+      "monsterWins": 481,
+      "draws": 0,
+      "flawless": 104,
+      "nearFlawless": 11,
+      "stats": {
+        "hunterHits": 18125,
+        "hunterDowns": 4127,
+        "revives": 1722,
+        "heartsCleansed": 766,
+        "surviveWins": 13
+      },
+      "medianRounds": 6
+    },
+    {
+      "monster": "harbinger",
+      "squad": 5,
+      "objective": "fight",
+      "games": 1000,
+      "hunterWins": 371,
+      "monsterWins": 629,
+      "draws": 0,
+      "flawless": 13,
+      "nearFlawless": 9,
+      "stats": {
+        "scans": 348,
+        "hunterDowns": 6312,
+        "hunterHits": 17734,
+        "revives": 2552,
+        "revealsByScan": 24
+      },
+      "medianRounds": 5
+    },
+    {
+      "monster": "harbinger",
+      "squad": 5,
+      "objective": "flight",
+      "games": 1000,
+      "hunterWins": 529,
+      "monsterWins": 471,
+      "draws": 0,
+      "flawless": 39,
+      "nearFlawless": 9,
+      "stats": {
+        "hunterDowns": 5463,
+        "heartsCleansed": 712,
+        "hunterHits": 18662,
+        "revives": 2354,
+        "surviveWins": 1
+      },
+      "medianRounds": 5
+    }
+  ],
+  "overall": {
+    "hunterWin": 0.5062,
+    "draw": 0,
+    "medianRounds": 5
+  },
+  "byMonster": {
+    "Revenant": 0.5465,
+    "Hive Queen": 0.48533333333333334,
+    "Chronophage": 0.5226666666666666,
+    "Greed Maw": 0.496,
+    "Abyssal Harbinger": 0.4805
+  },
+  "bySquad": {
+    "3": 0.5571,
+    "4": 0.4812,
+    "5": 0.4803
+  },
+  "byObjective": {
+    "fight": 0.4971333333333333,
+    "flight": 0.5152666666666667
+  },
+  "withClass": {
+    "Vanguard": {
+      "with": 0.6058071888634947,
+      "without": 0.3277819129140305
+    },
+    "Arcblade": {
+      "with": 0.445091211475495,
+      "without": 0.6154847104749512
+    },
+    "Riftweaver": {
+      "with": 0.4940553449976637,
+      "without": 0.5279821212403389
+    },
+    "Lifebinder": {
+      "with": 0.4851754845468832,
+      "without": 0.5429880843263062
+    },
+    "Chrono Stalker": {
+      "with": 0.49415082515145187,
+      "without": 0.5274603759675636
+    }
+  },
+  "blowouts": {
+    "hunterFlawless": 0.11373333333333334,
+    "monsterNearFlawless": 0.0211
+  },
+  "matchupRange": {
+    "min": 0.337,
+    "max": 0.631,
+    "inside40to60": 26,
+    "cells": 30
+  },
+  "gates": [
+    {
+      "name": "Overall Hunter win rate 40-60%",
+      "pass": true,
+      "detail": "50.6%"
+    },
+    {
+      "name": "Every monster 40-60%",
+      "pass": true,
+      "detail": "48.0% - 54.6%"
+    },
+    {
+      "name": "Draws 15% or less",
+      "pass": true,
+      "detail": "0.0%"
+    },
+    {
+      "name": "Every game finishes",
+      "pass": true,
+      "detail": "30000 of 30000"
+    }
+  ]
+}
