@@ -1,0 +1,1 @@
+{"name":"@abyss/server","version":"0.0.0","private":true,"type":"module","dependencies":{"@abyss/engine":"*","@colyseus/core":"^0.18.18","@colyseus/ws-transport":"^0.18.4","express":"^5.2.1"},"devDependencies":{"@types/express":"^5.0.6"}}

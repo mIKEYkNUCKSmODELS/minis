@@ -1,0 +1,11 @@
+{
+  "name": "ABYSS",
+  "short_name": "ABYSS",
+  "description": "Hunt the monster with your friends, or be the monster.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0912",
+  "theme_color": "#0b0912",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
