@@ -21,10 +21,9 @@ ASSUMPTIONS - verify on MKM
   2. Flags that worked on MKM (REPORT_UVTOOLS_ROUTE.txt): `print-issues <f> -i -o -r -s` (111 s) and
      `run <f> OperationRepairLayers -o <out>` (69.5 s); print-issues on the repaired file took ~3+ min.
   3. Whether print-issues exits non-zero when it finds issues is unknown: a step counts as OK if rc == 0 OR counts parsed.
-  4. The second repair profile `-p RepairIslands -p RepairResinTraps` is attempted only when `run --help` mentions
-     -p / --profile, as `run <f> OperationRepairLayers -p RepairIslands -p RepairResinTraps -o <variant>`; the exact
-     meaning of -p for that operation is unverified.  Its result is recorded under issues_repaired.json
-     ["profile_variant"], never as the main repaired file.
+  4. Repair runs the call proven on MKM: `run <f> OperationRepairLayers -p RepairIslands=true -p RepairResinTraps=true
+     -o <out>`.  If that fails it is retried once with UVtools' defaults (step "repair_defaults").  The old second
+     "profile variant" repair + scan repeated the same work (about 3 extra minutes a plate) and is off by default.
   5. Per-call timeout (default 1800 s) kills the process handed to subprocess; under the gate wrapper (cmd /c) a
      grandchild UVtoolsCmd may outlive the timeout - check Task Manager after a TIMEOUT.
   6. Issue-type names are canonicalised to Island, ResinTrap, SuctionCup, Overhang, TouchingBounds, EmptyLayer,
@@ -63,7 +62,9 @@ GATE_VRAM_GB = 0           # UVtoolsCmd is CPU only
 GATE_VRAM_GB_GPU = 2       # GPU parity worker; unmeasured guess (ASSUMPTION 8)
 PARITY_LABEL = "UNPROVEN until run on MKM"
 RAW_ARGS = ["-i", "-o", "-r", "-s"]          # islands, overhangs, resin traps, suction cups (worked on MKM)
-SECOND_PROFILE_ARGS = ["-p", "RepairIslands", "-p", "RepairResinTraps"]
+# Proven on MKM 11/20 (REPORT UVTOOLS ROUTE, step 6): both properties accepted, exit 0, 74 s on 1,911 layers.
+REPAIR_ARGS = ["-p", "RepairIslands=true", "-p", "RepairResinTraps=true"]
+SECOND_PROFILE_ARGS = REPAIR_ARGS            # kept for try_profiles=True; same as the main repair now, so off by default
 
 # ---------------------------------------------------------------------------------------------- issue-type names
 _CANON = {}
@@ -410,7 +411,7 @@ def _result(ctx, status, message, **extra):
 
 
 # ---------------------------------------------------------------------------------------------- uv_check
-def uv_check(pm7m, out_dir, uvtools=UVTOOLS, gate=False, timeout_s=DEFAULT_TIMEOUT_S, try_profiles=True):
+def uv_check(pm7m, out_dir, uvtools=UVTOOLS, gate=False, timeout_s=DEFAULT_TIMEOUT_S, try_profiles=False):
     """Detect (raw) -> repair -> detect (repaired) with UVtoolsCmd for one plate. Returns a result dict, never raises.
 
     status: OK | PARTIAL (raw scan ok, a later step failed) | FAILED_RAW_SCAN | WAITING_OBS | FAILED_INPUT |
@@ -473,8 +474,15 @@ def uv_check(pm7m, out_dir, uvtools=UVTOOLS, gate=False, timeout_s=DEFAULT_TIMEO
             return res
         if os.path.isfile(repaired):
             os.remove(repaired)                      # our own earlier output only; stops a stale file passing the size check
-        s_rep, _ = ctx.run("repair", [uvtools, "run", pm7m, "OperationRepairLayers", "-o", repaired])
+        # the proven call first; if this UVtools build refuses the properties, one retry with its defaults
+        s_rep, _ = ctx.run("repair", [uvtools, "run", pm7m, "OperationRepairLayers"] + REPAIR_ARGS + ["-o", repaired])
         rep_ok = _repair_ok(s_rep, repaired)
+        if not rep_ok and s_rep["status"] != "TIMEOUT":
+            s_rep["status"] = "SUPERSEDED"
+            if os.path.isfile(repaired):
+                os.remove(repaired)
+            s_rep, _ = ctx.run("repair_defaults", [uvtools, "run", pm7m, "OperationRepairLayers", "-o", repaired])
+            rep_ok = _repair_ok(s_rep, repaired)
         if rep_ok:
             res["repaired_pm7m"] = repaired
             res["repaired_bytes"] = os.path.getsize(repaired)
@@ -528,9 +536,9 @@ def uv_check(pm7m, out_dir, uvtools=UVTOOLS, gate=False, timeout_s=DEFAULT_TIMEO
             res["status"] = "FAILED_RAW_SCAN"
             res["message"] = "raw print-issues %s: %s" % (s_raw["status"], s_raw["message"])
         else:
-            bad = [s for s in ctx.steps if s["name"] in ("repair", "print_issues_repaired", "print_issues_repaired_plain",
+            bad = [s for s in ctx.steps if s["name"] in ("repair", "repair_defaults", "print_issues_repaired", "print_issues_repaired_plain",
                                                            "repair_profiles", "print_issues_repaired_profiles")
-                   and s["status"] not in ("OK",)]
+                   and s["status"] not in ("OK", "SUPERSEDED")]
             if not rep_ok:
                 bad = bad or [s_rep]
             if bad:
