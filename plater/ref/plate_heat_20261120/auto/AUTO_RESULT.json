@@ -1,0 +1,10 @@
+{
+ "plates": 22,
+ "gap_mm": 3.5,
+ "placed": 368,
+ "carried": 1,
+ "out": "C:\\MKM_TMP\\plate_heat_20261120\\auto\\try_N22_g3.5\\out",
+ "low_cap": 3234.6153846153843,
+ "high_cap": 4646.153846153846,
+ "scale": 1.04
+}
