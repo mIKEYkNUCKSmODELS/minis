@@ -97,7 +97,7 @@ RUN/
   inward one grid step at a time, identical repeated layers counted once, layer interval reported.
   Rating mapping (PROPOSAL until Mike says yes — write that in rating.json `rating_basis`):
   WILL NOT PRINT = a verified hard-gate defect survives repair; RISKY = a hard-gate hit that could not be verified either way
-  (unclear) or the plate has a shared last loop; LIKELY WITH NOTES = hard gate clean, leftover band events written on it;
+  (unclear); band events (END included) are never a veto -> LIKELY WITH NOTES; LIKELY WITH NOTES = hard gate clean, leftover band events written on it;
   LIKELY = hard gate clean, no events. Reasons list: model, layer interval, event/defect.
 - `heat_png(store_dir, out_png, ...)` — heat map at printer pixels from the store (layers cured per spot, green->red, downsampled for
   display), peel ring overlay, model labels, rating banner. Reuse the look of `ref/plate_heat_20261120/plate_heat.py`.
