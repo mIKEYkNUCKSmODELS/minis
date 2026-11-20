@@ -1,0 +1,13 @@
+UVTOOLS ROUTE REPORT 20261120 (PARTIAL - full 1911-layer run queued in gate, see job2.log)
+ROUTE THAT WORKS: PNG layers -> Prusa SL1 zip -> pm7m.
+FAILED: convert layers_png.zip pm7m -> "Invalid file: layers_png.zip" (a plain zip of PNGs is not recognized by any .zip format).
+WORKS (60-layer test, 3.6 s): zip renamed .sl1 holding job00000.png.. (flat, 8-bit grayscale, numbered from 0), config.ini (jobDir=job, layerHeight=0.03, expTime, expTimeFirst, numFast...), prusaslicer.ini = M7 Max printer ini (display_pixels 6480x3600, FILEFORMAT_PM7M in printer_notes) + layer_height/exposure lines.
+CMD: UVtoolsCmd convert t60.sl1 pm7m t60.pm7m
+print-properties t60.pm7m: ResolutionX 6480, ResolutionY 3600, LayerHeight 0.03, LayerCount 60 (G1 pass on subset). Defaults after convert: lift 8, bottom layers 0 (use copy-parameters to fix).
+copy-parameters usage: copy-parameters <source-with-params> <target>...  (earlier failure was only the missing target file).
+compare usage: compare <a> <b> [--without-layers]
+DETECTION on real plate copy.pm7m (print-issues -i -o -r -s, 111 s): Island 3354, ResinTrap 6110, SuctionCup 941.
+REPAIR: run copy.pm7m OperationRepairLayers -o repaired.pm7m (defaults, 69.5 s) wrote repaired.pm7m (70,010,391 bytes, from 93.6 MB). print-issues on it ran about 3+ min.
+OPEN: full 1911-layer build/convert/compare/repair-with -p RepairIslands/RepairResinTraps queued in MKM gate as UVSCOUT (RAM-starved, free RAM 2-2.6 GB vs ask 3). Script F:\MKM_STAGE\UVTOOLS_SCOUT_20261120\job2.ps1 writes job2.log and f_*.out.txt.
+Source plate still 93612143 bytes.
+AFTER default repair (repaired.pm7m): Island 1646, ResinTrap 1521, SuctionCup 933 (before 3354/6110/941). Repair reduces but does not clear issues.

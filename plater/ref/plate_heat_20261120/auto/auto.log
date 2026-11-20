@@ -1,0 +1,18 @@
+02:40:56 run N=auto gap=0.5 -> {"placed": 368, "beds_used": 21, "beds": 21, "carried": 1, "gap_log": "0.5", "edge_log": "0.5", "written": 21, "secs": 50}
+02:41:44 run N=22 gap=0.5 -> {"placed": 368, "beds_used": 22, "beds": 22, "carried": 1, "gap_log": "0.5", "edge_log": "0.5", "written": 22, "secs": 48}
+02:41:44 PLATE COUNT decided: 21 (places 368 pieces, 1 carried at the smallest gap)
+02:42:38 run N=21 gap=4.0 -> {"placed": 368, "beds_used": 21, "beds": 21, "carried": 1, "gap_log": "4.0", "edge_log": "0.5", "written": 21, "secs": 54}
+02:43:39 run N=21 gap=8.0 -> {"placed": 325, "beds_used": 21, "beds": 21, "carried": 44, "gap_log": "8.0", "edge_log": "0.5", "written": 21, "secs": 61}
+02:44:38 run N=21 gap=5.0 -> {"placed": 359, "beds_used": 21, "beds": 21, "carried": 10, "gap_log": "5.0", "edge_log": "0.5", "written": 21, "secs": 60}
+02:44:38 GAP decided: 4.0 mm (largest tried that still places all 368 pieces on 21 plates; next size up 5.0 mm does not fit)
+02:49:00 AUTO DONE
+05:15:35 START caps 3235 / 4646 (measurement correction 1.040); bed-edge clearance = gap
+05:17:22 run N=auto gap=0.5 -> {"placed": 368, "beds_used": 22, "beds": 22, "carried": 1, "gap_log": "0.5", "edge_log": "0.5", "written": 22, "secs": 107}
+05:18:14 run N=23 gap=0.5 -> {"placed": 368, "beds_used": 23, "beds": 23, "carried": 1, "gap_log": "0.5", "edge_log": "0.5", "written": 23, "secs": 52}
+05:18:14 PLATE COUNT decided: 22 (places 368 pieces, 1 carried at the smallest gap)
+05:19:06 run N=22 gap=3.5 -> {"placed": 368, "beds_used": 22, "beds": 22, "carried": 1, "gap_log": "3.5", "edge_log": "3.5", "written": 22, "secs": 52}
+05:20:06 run N=22 gap=5.0 -> {"placed": 342, "beds_used": 22, "beds": 22, "carried": 27, "gap_log": "5.0", "edge_log": "5.0", "written": 22, "secs": 60}
+05:20:59 run N=22 gap=4.0 -> {"placed": 350, "beds_used": 22, "beds": 22, "carried": 19, "gap_log": "4.0", "edge_log": "4.0", "written": 22, "secs": 53}
+05:20:59 GAP decided: 3.5 mm (largest tried that still places all 368 pieces on 22 plates; next size up 4.0 mm does not fit)
+05:24:48 CHECK fine slice: worst plate at 0.994 of the clean-print limit; 22 plates
+05:24:48 AUTO DONE

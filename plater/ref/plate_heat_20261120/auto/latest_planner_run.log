@@ -1,0 +1,256 @@
+planner=mkm_gpupool10.py position=film-membrane energy from the physics core (PHYSICS CORE UNVERIFIED) NPOOL=22
+profiles: {'machine': 'anycubic_m7max', 'film': 'film_acf', 'resin': 'resin_sunlu_abslike', 'settings': 'settings_mkm_mini'} bracket choice: central | parameter file: C:\MKM_TMP\plater_one_build_20261117\tree\physics\profiles_filled\planner_params_m7max_acf_sunlu.json | overlay filled: ['film.contact_gap_um']
+PLANNER PARAMETERS (every non-solver number; see the parameter file for meaning/source):
+  solver_grid_pitch_mm           printability_input derived            0.5 [0.125..0.5] mm  <- Grid-convergence study of the core (READ_FIRST.md status: dx 0.5/0.25/0.125 gave observed order 1.97, GCI_fine
+  raft_band_mm                   geometry   decided            0.3 [0.15..0.6] mm  <- Pre-supported STLs carry a 0.3 mm raft: mkm_ringpack.hold_ratio/peel profile start 'round(0.3 + (j+1)*PEEL_DZ)
+  film_poisson                   printability_input estimate           0.48 [0.4..0.48] -  <- Drive params_m7max_sunlu_abs.json (id 1s9RZBdmR7XDPrGtMU4vIfXZwifwq0zTj, generated 2026-11-16) film.poisson_ra
+  plate_force_budget_N | PENDING (numeric allotment inactive) | stand-in: proven at current working settings, Mike 11/17 16:31 | applies to successful prints at the matching settings; numeric capacities require a solved reference
+  layer_area_budget_mm2 | PENDING (numeric allotment inactive) | stand-in: proven at current working settings, Mike 11/17 16:31 | applies to successful prints at the matching settings; numeric capacities require a solved reference
+  packing_efficiency             search_heuristic planner heuristic  1.0 [0.5..1.0] -  <- Carried from planner pool8-pool10 (GB_EFF). Not physics. Mike 11/14 asked for ~98 % of the mechanical limit; s
+  min_plate_use_fraction         search_heuristic planner heuristic  0.0 [0.3..0.98] -  <- Carried from planner pool8-pool10 (GB_CARRY). Mike's rule: sparse plates are not acceptable (11/8, 11/10); the
+  raster_pitch_mm                search_heuristic planner heuristic  0.5 [0.25..1.0] mm  <- Carried from planner v8 (R = 0.5 mm); a finer raster is slower, a coarser one rounds the gap. Convergence of t
+  edge_margin_mm                 search_heuristic decided            3.5 [2.0..5.0] mm  <- plate_packer/mkm_ringpack.py:22 EDGE = 3.0 (MKM_EDGE); carried unchanged.
+  min_gap_mm                     search_heuristic planner heuristic  3.5 [2.0..6.0] mm  <- Carried from planner v8 (GB_GAP = 3.0); mkm_ringpack uses 2 mm (RDIL).
+  centre_clear_diam_mm           search_heuristic decided            0.0 [0.0..40.0] mm  <- Mike's 32 mm floor (planner comment 'CLEAR = Mike 32 mm floor'). [32 mm centre floor removed - Mike 2026-11-17
+  tall_flag_mm                   search_heuristic decided            140.0 mm  <- Mike: 'gate is 140 mm tall' (task brief 20261116; planner GB_TALL default 140).
+  big_model_allow_regex          search_heuristic decided            dragon|wyrm|drake|wyvern|tarrasque|tarasque|kraken regex  <- Mike 11/14: dragons, tarrasques and krakens are OK at that size (memory + planner GB_ALLOW).
+  round_quantiles                search_heuristic decided            [0.6667, 0.3333] -  <- Mike 11/14 12:42: rounds large -> medium -> small; thirds are the neutral split.
+  seconds_per_layer              report_only measured           14.56 [13.64..15.49] s  <- Two completed MKM prints: 40733 s / 2987 layers = 13.64 and 38679 s / 2497 layers = 15.49 (planner v8 comment)
+  film_self_compliance_rel_tol   printability_input decided            0.02 -  <- Numerical tolerance, same role as the core's own tolerances (GCI 0.24 %). Decided 2 % of the map's peak: measu
+  max_plates_per_model           search_heuristic decided            3 plates  <- Mike 11/14: OK to split models across up to 3 plates total to fill plates to ~98 % of the mechanical limit; 4 
+  centre_zone_open_to_small      search_heuristic decided            True bool  <- Mike's placement rule as given in the 20261116 task brief: rounds large -> medium -> small in concentric rings
+  film_adhesion_energy_J_m2      printability_input estimate           0.043 [0.035..0.06] J/m2  <- Drive params_m7max_sunlu_abs.json (id 1s9RZBdmR7XDPrGtMU4vIfXZwifwq0zTj, generated 2026-11-16) interface.work_
+  film_contact_gap_um            printability_input estimate           30.0 [10.0..100.0] um  <- Mike 11/15: the gap is the layer height (0.03 mm now), dynamic with layer height (central = layer height, set 
+  film_interface_strength_MPa    printability_input estimate           0.0565 [0.012..0.101325] MPa  <- NOT published. Bounds derived here [INFERRED]: LOW = AmeraLabs ACF peel stress slope 12 kPa (Drive params inte
+  film_stretch_closure           printability_input estimate           biaxial -  <- Core law 3 (mkm_physics.py:733, Foppl-von Karman mean-strain closure T = T0 + E t <|grad w|^2>/(4(1-nu)), equi
+  resin_temperature_C            printability_input decided            30.0 C  <- Mike 11/15 decision: vat heater set point 30 C (Drive params process.vat_heater_setpoint_C, tag MIKE; Anycubic
+  resin_viscosity_30C_mPa_s      printability_input estimate           230.0 [139.0..339.0] mPa*s at 30 C  <- Drive params_m7max_sunlu_abs.json (id 1s9RZBdmR7XDPrGtMU4vIfXZwifwq0zTj, generated 2026-11-16) resin.viscosity
+  resin_surface_tension_N_m      printability_input estimate           0.032 [0.028..0.04] N/m  <- Drive params_m7max_sunlu_abs.json (id 1s9RZBdmR7XDPrGtMU4vIfXZwifwq0zTj, generated 2026-11-16) resin.surface_t
+  resin_green_tensile_MPa        printability_input estimate           17.0 [0.0..34.0] MPa  <- UPPER BOUND ONLY. HIGH 34 MPa = Sunlu ABS-Like data sheet tensile strength (ISO 527, post-cured; Drive params 
+file identity: 369 from disk, 0 read
+coarse bound cache: 366 from disk, 0 computed
+core piece loads (coarse bound): 366 distinct footprints, N min/median/max 9.07/84.2/2.61e+03, 0.0s
+NPOOL=22 beds: job needs 22 (job-stated), VRAM admission allows 2458
+allotments: bed 45608 mm2 (usable 45608 x packing 1.00) | force budget PENDING (inactive; solver verdict decides) | per-layer area budget 3235 mm2 | force reference for piece size 2505 N (pool mean plate load from the core)
+(a) LOAD masks: 369 pieces, cache 369 hit / 0 miss, 4.3s | hit by content/alias/legacy key: {'content': 1, 'alias': 109, 'legacy': 0, 'filled': 259} | PIECES MEASURED THIS RUN: 0
+BIG-MODEL FLAGS (flagged for Mike before plating - NOT held, all models are plated):
+  FLAG GraveyardRevenant_Supports                     2 parts | tallest   175 mm ( 6.9 in) | 0.39 plates | ~23.6 h | tallest part 175 mm (6.9 in) > 140 mm  -> PLATED, NOT HELD
+  FLAG 00 BIGGUN Summoned Infernal WINGS - Chitubox supported  2 parts | tallest   171 mm ( 6.7 in) | 0.35 plates | ~23.1 h | tallest part 171 mm (6.7 in) > 140 mm  -> PLATED, NOT HELD
+  ok   Bust - Ghast, Demon Cleric                     2 parts | tallest   132 mm ( 5.2 in) | 0.18 plates | ~17.8 h | 
+  FLAG SV07 Neverishka Spawn of Ethrazek - Presupported 20 parts | tallest   130 mm ( 5.1 in) | 1.85 plates | ~17.6 h | needs 1.8 plates of bed allotment by itself  -> PLATED, NOT HELD
+  ok   SKeleton King pencil pot                       1 parts | tallest   129 mm ( 5.1 in) | 0.79 plates | ~17.4 h | 
+  FLAG CometLordMinis_283_Silas_Night-Changed        11 parts | tallest   118 mm ( 4.6 in) | 1.62 plates | ~15.9 h | needs 1.6 plates of bed allotment by itself  -> PLATED, NOT HELD
+  FLAG Khepresh - The Vault Father - Presupported    11 parts | tallest   118 mm ( 4.6 in) | 1.48 plates | ~15.8 h | needs 1.5 plates of bed allotment by itself  -> PLATED, NOT HELD
+  FLAG CP6 08 Talva - Claw of Winter - Presupported   9 parts | tallest   111 mm ( 4.4 in) | 1.64 plates | ~14.9 h | needs 1.6 plates of bed allotment by itself  -> PLATED, NOT HELD
+  ok   Bust - Yrit, Ceremorph Warrior                 3 parts | tallest   103 mm ( 4.1 in) | 0.18 plates | ~13.9 h | 
+  ok   Vaultsworn Scarab - Presupported               8 parts | tallest   103 mm ( 4.1 in) | 0.80 plates | ~13.9 h | 
+  ok   CP6 05 Sligo - Ice Troll King - Presupported   4 parts | tallest   103 mm ( 4.0 in) | 0.47 plates | ~13.8 h | 
+  ok   Hellrider - 52 x 90mm Base                     3 parts | tallest   101 mm ( 4.0 in) | 0.24 plates | ~13.7 h | 
+  ok   Scarab Dragon - Presupported                   4 parts | tallest   100 mm ( 4.0 in) | 0.45 plates | ~13.5 h | 
+  ok   04_Sekhaton Primevil - 120mm Base             10 parts | tallest    98 mm ( 3.8 in) | 0.63 plates | ~13.2 h | 
+  ok   13_Infested Giant - 60mm Base                  2 parts | tallest    96 mm ( 3.8 in) | 0.11 plates | ~13.0 h | 
+  ok   Shrikes of Ruin                               15 parts | tallest    95 mm ( 3.7 in) | 0.71 plates | ~12.8 h | 
+  ok   SV10 Torgrasyl Draketh Champion - Presupported  4 parts | tallest    95 mm ( 3.7 in) | 0.30 plates | ~12.8 h | 
+  ok   01_The Sepulchrite - 40mm Base                 2 parts | tallest    90 mm ( 3.5 in) | 0.11 plates | ~12.1 h | 
+  ok   Enemy - Ifrit, Genie of Fire                   2 parts | tallest    89 mm ( 3.5 in) | 0.22 plates | ~12.0 h | 
+  FLAG Sebau Worm - Presupported                      8 parts | tallest    84 mm ( 3.3 in) | 1.16 plates | ~11.3 h | needs 1.2 plates of bed allotment by itself  -> PLATED, NOT HELD
+  ok   Hoardlurk - Presupported                       2 parts | tallest    83 mm ( 3.3 in) | 0.30 plates | ~11.2 h | 
+  ok   Oceanvoid Scion - Presupported                 3 parts | tallest    81 mm ( 3.2 in) | 0.56 plates | ~11.0 h | 
+  ok   SV09 The Archvillain Statue - Presupported     4 parts | tallest    81 mm ( 3.2 in) | 0.29 plates | ~10.9 h | 
+  ok   02_ Sekhaton Coldbloods x3 - 32mm Base         4 parts | tallest    79 mm ( 3.1 in) | 0.09 plates | ~10.7 h | 
+  ok   04_Grafted Nemesis Knight - 50mm Base          2 parts | tallest    78 mm ( 3.1 in) | 0.06 plates | ~10.6 h | 
+  ok   Enemy - Abyssal Juggernaut                     2 parts | tallest    78 mm ( 3.1 in) | 0.26 plates | ~10.6 h | 
+  ok   Creature Crusade - Immaculate                  2 parts | tallest    77 mm ( 3.0 in) | 0.12 plates | ~10.4 h | 
+  ok   Mounted_Warrior                                2 parts | tallest    76 mm ( 3.0 in) | 0.35 plates | ~10.2 h | 
+  ok   Enemy - Daughter of Darkness                   4 parts | tallest    75 mm ( 3.0 in) | 0.21 plates | ~10.2 h | 
+  ok   18_Remade Guardian - 40mm Base                 2 parts | tallest    75 mm ( 3.0 in) | 0.06 plates | ~10.1 h | 
+  ok   Highsea Slitherdrake - Presupported            2 parts | tallest    74 mm ( 2.9 in) | 0.20 plates | ~10.0 h | 
+  ok   02_The Meat x3 - 40mm Base V2                  5 parts | tallest    73 mm ( 2.9 in) | 0.21 plates | ~ 9.9 h | 
+  ok   17_Remaker - 60mm Base                         3 parts | tallest    72 mm ( 2.8 in) | 0.16 plates | ~ 9.7 h | 
+  ok   Hellfiend B - 32mm Base                        1 parts | tallest    68 mm ( 2.7 in) | 0.04 plates | ~ 9.2 h | 
+  ok   Scorpian Cataphract - Presupported             8 parts | tallest    68 mm ( 2.7 in) | 0.30 plates | ~ 9.2 h | 
+  ok   08_Pierrot, the Flesh Artisan - 40mm Base      3 parts | tallest    67 mm ( 2.6 in) | 0.08 plates | ~ 9.0 h | 
+  ok   13_Dark Elf Royal Guard - 40mm Base v2         2 parts | tallest    66 mm ( 2.6 in) | 0.06 plates | ~ 8.9 h | 
+  ok   04_Druid Triune - 25mm Base                    4 parts | tallest    65 mm ( 2.6 in) | 0.18 plates | ~ 8.8 h | 
+  ok   14_Dark Elf Bladeswarm - 40mm Base v2          2 parts | tallest    65 mm ( 2.5 in) | 0.06 plates | ~ 8.7 h | 
+  ok   03_Roothost Treants x2 - 40mm Base             3 parts | tallest    64 mm ( 2.5 in) | 0.16 plates | ~ 8.7 h | 
+  ok   02_Hellfiend Ascendant - 40mm Base             3 parts | tallest    64 mm ( 2.5 in) | 0.15 plates | ~ 8.7 h | 
+  ok   Scarab Spawn - Presupported                    8 parts | tallest    64 mm ( 2.5 in) | 0.46 plates | ~ 8.6 h | 
+  ok   02_Wood Elf Remant -32mm Base                  2 parts | tallest    62 mm ( 2.4 in) | 0.05 plates | ~ 8.4 h | 
+  ok   SV02 Baldgrim the Blacksmith - Presupported    2 parts | tallest    61 mm ( 2.4 in) | 0.10 plates | ~ 8.3 h | 
+  ok   Creature Crusade_Cantor Troopers x 6           8 parts | tallest    60 mm ( 2.4 in) | 0.30 plates | ~ 8.1 h | 
+  ok   01_Sekhaton Necromancer - 50mm Base            2 parts | tallest    60 mm ( 2.4 in) | 0.11 plates | ~ 8.1 h | 
+  ok   DreadBalthazar_Supports                        4 parts | tallest    59 mm ( 2.3 in) | 0.20 plates | ~ 7.9 h | 
+  ok   01_The Coterie x3 - 40mm Base and 25mm Base    5 parts | tallest    59 mm ( 2.3 in) | 0.14 plates | ~ 7.9 h | 
+  ok   Vaultsworn Zealot - Presupported               8 parts | tallest    58 mm ( 2.3 in) | 0.21 plates | ~ 7.9 h | 
+  ok   RevenantWarrior_SpearStandB_Supports           1 parts | tallest    58 mm ( 2.3 in) | 0.01 plates | ~ 7.8 h | 
+  ok   10_The Fingers x5 - 25mm Base                  6 parts | tallest    58 mm ( 2.3 in) | 0.07 plates | ~ 7.8 h | 
+  ok   01_The Flayed General - 25mm Base              3 parts | tallest    57 mm ( 2.3 in) | 0.08 plates | ~ 7.7 h | 
+  ok   Enemy - Ash Demon                              2 parts | tallest    56 mm ( 2.2 in) | 0.05 plates | ~ 7.6 h | 
+  ok   SV06 Khadan Gith Swordmaster - Presupported    2 parts | tallest    56 mm ( 2.2 in) | 0.06 plates | ~ 7.6 h | 
+  ok   Stitchfiend_Supports                           5 parts | tallest    56 mm ( 2.2 in) | 0.20 plates | ~ 7.6 h | 
+  ok   09_Sewn Vessels x5 - 30mm Base                 6 parts | tallest    55 mm ( 2.2 in) | 0.19 plates | ~ 7.5 h | 
+  ok   12_Infested Wolves x3 - 25x50mm Base           5 parts | tallest    55 mm ( 2.2 in) | 0.09 plates | ~ 7.4 h | 
+  ok   RevenantWarrior_BowAttack_Supports             1 parts | tallest    53 mm ( 2.1 in) | 0.02 plates | ~ 7.2 h | 
+  ok   SV11 Zadkiel the Fallen - Presupported        10 parts | tallest    52 mm ( 2.1 in) | 0.14 plates | ~ 7.0 h | 
+  ok   Ossuary Crawler - Presupported                 2 parts | tallest    52 mm ( 2.0 in) | 0.06 plates | ~ 7.0 h | 
+  ok   P4                                             3 parts | tallest    52 mm ( 2.0 in) | 0.10 plates | ~ 7.0 h | 
+  ok   Voidtouched Grafter - Presupported             2 parts | tallest    52 mm ( 2.0 in) | 0.08 plates | ~ 7.0 h | 
+  ok   Progenitor Pursuers x5 - 25mm Base             6 parts | tallest    51 mm ( 2.0 in) | 0.15 plates | ~ 6.9 h | 
+  ok   02_The Haruspex - 25mm Base                    2 parts | tallest    50 mm ( 2.0 in) | 0.03 plates | ~ 6.7 h | 
+  ok   P1                                             3 parts | tallest    50 mm ( 2.0 in) | 0.11 plates | ~ 6.7 h | 
+  ok   03_Sekhaton Gladiators x3 - 25mm Base          4 parts | tallest    50 mm ( 1.9 in) | 0.07 plates | ~ 6.7 h | 
+  ok   P2                                             3 parts | tallest    50 mm ( 1.9 in) | 0.11 plates | ~ 6.7 h | 
+  ok   P3                                             3 parts | tallest    50 mm ( 1.9 in) | 0.11 plates | ~ 6.7 h | 
+  ok   02_Soul Vessels x 5 - 25mm Base                6 parts | tallest    49 mm ( 1.9 in) | 0.07 plates | ~ 6.6 h | 
+  ok   03_Harrowborn x5 - 25mm Base                   6 parts | tallest    49 mm ( 1.9 in) | 0.09 plates | ~ 6.6 h | 
+  ok   Nerfu - Catacomb Sorcerer - Presupported       2 parts | tallest    49 mm ( 1.9 in) | 0.07 plates | ~ 6.6 h | 
+  ok   06_Remade Servitors x10 - 32mm Base           11 parts | tallest    49 mm ( 1.9 in) | 0.24 plates | ~ 6.6 h | 
+  FLAG TEST5_HAND_RING_1110                           1 parts | tallest    49 mm ( 1.9 in) | 1.20 plates | ~ 6.6 h | needs 1.2 plates of bed allotment by itself  -> PLATED, NOT HELD
+  ok   10_Infested Abbot - 32mm Base                  2 parts | tallest    48 mm ( 1.9 in) | 0.05 plates | ~ 6.5 h | 
+  ok   Kaimoku - Reef Knight - Presupported           1 parts | tallest    48 mm ( 1.9 in) | 0.04 plates | ~ 6.5 h | 
+  ok   Khalef - Vault Guardian - Presupported         2 parts | tallest    48 mm ( 1.9 in) | 0.09 plates | ~ 6.4 h | 
+  ok   The Necromancer - 30mm base_supported          2 parts | tallest    47 mm ( 1.9 in) | 0.07 plates | ~ 6.4 h | 
+  ok   SV05 Kalineas the Broken - Presupported        5 parts | tallest    47 mm ( 1.9 in) | 0.16 plates | ~ 6.4 h | 
+  ok   SV03 Gharl the Cleric - Presupported           3 parts | tallest    47 mm ( 1.9 in) | 0.10 plates | ~ 6.3 h | 
+  ok   Hellfiend C - 32mm Base                        1 parts | tallest    44 mm ( 1.7 in) | 0.04 plates | ~ 5.9 h | 
+  ok   SV01 Alcuin the Witchunter - Presupported      2 parts | tallest    44 mm ( 1.7 in) | 0.04 plates | ~ 5.9 h | 
+  ok   03_Grave Hounds x 3 - 25mm Base                4 parts | tallest    44 mm ( 1.7 in) | 0.08 plates | ~ 5.9 h | 
+  ok   SV04 Isabetta of the Dawn - Presupported       2 parts | tallest    43 mm ( 1.7 in) | 0.07 plates | ~ 5.8 h | 
+  ok   Fulsome Snailbrother - 32mm Base               3 parts | tallest    43 mm ( 1.7 in) | 0.15 plates | ~ 5.8 h | 
+  ok   Thrymgar - The Vault-Cracker - Presupported    2 parts | tallest    42 mm ( 1.7 in) | 0.10 plates | ~ 5.7 h | 
+  ok   Taintblade Mercenary - 25mm Base               2 parts | tallest    41 mm ( 1.6 in) | 0.06 plates | ~ 5.6 h | 
+  ok   Hellfiend A - 32mm Base                        2 parts | tallest    41 mm ( 1.6 in) | 0.08 plates | ~ 5.5 h | 
+  ok   Scavengers of Ruin                             3 parts | tallest    37 mm ( 1.4 in) | 0.05 plates | ~ 5.0 h | 
+  ok   Daughter Rat - 25mm Base                       2 parts | tallest    36 mm ( 1.4 in) | 0.08 plates | ~ 4.9 h | 
+  ok   05_Untethered Souls x 7 - 25mm Base            8 parts | tallest    35 mm ( 1.4 in) | 0.07 plates | ~ 4.7 h | 
+  ok   03_The Skinstalker - 25mm Base                 1 parts | tallest    34 mm ( 1.3 in) | 0.01 plates | ~ 4.6 h | 
+  ok   CometLordMinis_287_Perpetual_Heavy_Knights     1 parts | tallest    30 mm ( 1.2 in) | 0.03 plates | ~ 4.0 h | 
+  ok   RevenantWarrior_Base_Supports                  1 parts | tallest    28 mm ( 1.1 in) | 0.03 plates | ~ 3.8 h | 
+rounds (units) from terciles of piece size (share of a bed's binding allotment): large >= 0.0513, medium >= 0.0253, small below | large 67 units, medium 58 units, small 26 units
+film model: core membrane (mp.membrane_deflection), T0 7041 N/m (bracket:central [4889.609098061949..9583.633832201422]), window bracket:central, pad m (0.0163, 0.0163, 0.0205, 0.0205); assumptions: ['film window offset pending: centred on the bed']; self-compliance: exact lattice solves refined to rel tol 0.02
+22 empty beds open on the GPU before the first piece is placed (595x328 px at 0.5 mm, gap 3.5 mm, edge 3.5 mm, circle 0.0 mm)
+round large: 176 pieces of 177 placed, 176 on beds, 1 models failed so far  [26.9s]
+round medium: 147 pieces of 147 placed, 323 on beds, 1 models failed so far  [10.2s]
+round small: 45 pieces of 45 placed, 368 on beds, 1 models failed so far  [3.9s]
+figures (body+base) split over more than one plate: i, h, a, a, h (only where no single plate could hold the figure)
+(b) PLACE: 368 pieces on 22 of 22 beds, 0 pieces moved to clear sparse beds, 1 models carried, 40.9s
+RAM MONITOR WARNING: free RAM 1.92 GiB is under the old 3.00 GiB floor; continuing (monitor only, no budget). Hard stop (pause and retry) only below 1.00 GiB. reservation 0 MiB, pending 0 MiB
+P1: 15 pcs, 25-175 mm, ~23.6 h | allotment used: area 80% (peak 2594 mm2), force n/a (budget pending) (2773 N), bed 64% (real footprint 61% of bed) | placement check OK | VERDICT UNSOLVED | 03_Sekhaton Gladiators x3 - 25mm Base; GraveyardRevenant_Supports; Hellrider - 52 x 90mm Base; P1; P2; P3; P4; Vaultsworn Zealot - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 15 pcs, 175.3 mm; peel force (core coarse bound, sum of pieces) 2773 N at lift 60.0 mm/min; outer-zone spread 172.7 N, centre zone 308.3 N, centre of pull 6.2 mm off middle; smallest gap 4.0 mm; real footprint 61% of bed; cured-area envelope peak 2594 mm2 at 0.0 mm
+     zones N: back-left 312.7 | back-centre 251.2 | back-right 231.2 | middle-left 262.5 | middle-centre 308.3 | middle-right 403.4 | front-left 304.4 | front-centre 295.0 | front-right 403.9
+     first layer on plate (z min within 0.05 mm of 0): 15 of 15
+     empty radius at centre 4.8 mm (supports included) | small pieces 3 of 15 | smallest gap 4.0 mm
+P2: 14 pcs, 22-118 mm, ~15.9 h | allotment used: area 97% (peak 3136 mm2), force n/a (budget pending) (2295 N), bed 74% (real footprint 67% of bed) | placement check OK | VERDICT UNSOLVED | 05_Untethered Souls x 7 - 25mm Base; CometLordMinis_283_Silas_Night-Changed; SV07 Neverishka Spawn of Ethrazek - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 14 pcs, 118.1 mm; peel force (core coarse bound, sum of pieces) 2295 N at lift 60.0 mm/min; outer-zone spread 86.1 N, centre zone 248.3 N, centre of pull 4.7 mm off middle; smallest gap 4.0 mm; real footprint 67% of bed; cured-area envelope peak 3136 mm2 at 0.0 mm
+     zones N: back-left 268.5 | back-centre 261.6 | back-right 225.9 | middle-left 312.0 | middle-centre 248.3 | middle-right 281.6 | front-left 240.7 | front-centre 228.6 | front-right 228.0
+     first layer on plate (z min within 0.05 mm of 0): 14 of 14
+     empty radius at centre 0.2 mm (supports included) | small pieces 8 of 14 | smallest gap 4.0 mm
+P3: 13 pcs, 28-109 mm, ~14.7 h | allotment used: area 99% (peak 3212 mm2), force n/a (budget pending) (2080 N), bed 61% (real footprint 53% of bed) | placement check OK | VERDICT UNSOLVED | 05_Untethered Souls x 7 - 25mm Base; 12_Infested Wolves x3 - 25x50mm Base; 14_Dark Elf Bladeswarm - 40mm Base v2; CometLordMinis_283_Silas_Night-Changed; Daughter Rat - 25mm Base; The Necromancer - 30mm base_supported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 13 pcs, 108.9 mm; peel force (core coarse bound, sum of pieces) 2080 N at lift 60.0 mm/min; outer-zone spread 114.6 N, centre zone 149.3 N, centre of pull 5.1 mm off middle; smallest gap 4.0 mm; real footprint 53% of bed; cured-area envelope peak 3212 mm2 at 0.0 mm
+     zones N: back-left 217.6 | back-centre 194.3 | back-right 222.1 | middle-left 284.3 | middle-centre 149.3 | middle-right 278.2 | front-left 193.4 | front-centre 232.5 | front-right 307.9
+     first layer on plate (z min within 0.05 mm of 0): 13 of 13
+     empty radius at centre 4.4 mm (supports included) | small pieces 3 of 13 | smallest gap 4.0 mm
+P4: 7 pcs, 53-129 mm, ~17.4 h | allotment used: area 99% (peak 3217 mm2), force n/a (budget pending) (1521 N), bed 32% (real footprint 32% of bed) | placement check OK | VERDICT UNSOLVED | 08_Pierrot, the Flesh Artisan - 40mm Base; 12_Infested Wolves x3 - 25x50mm Base; Bust - Yrit, Ceremorph Warrior; SKeleton King pencil pot
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 7 pcs, 128.7 mm; peel force (core coarse bound, sum of pieces) 1521 N at lift 60.0 mm/min; outer-zone spread 321.1 N, centre zone 0.0 N, centre of pull 13.7 mm off middle; smallest gap 5.0 mm; real footprint 32% of bed; cured-area envelope peak 3217 mm2 at 0.0 mm
+     zones N: back-left 146.0 | back-centre 94.2 | back-right 257.3 | middle-left 323.6 | middle-centre 0.0 | middle-right 96.1 | front-left 359.7 | front-centre 38.6 | front-right 204.9
+     first layer on plate (z min within 0.05 mm of 0): 7 of 7
+     empty radius at centre 55.5 mm (supports included) | small pieces 1 of 7 | smallest gap 5.0 mm
+P5: 19 pcs, 22-171 mm, ~23.1 h | allotment used: area 63% (peak 2047 mm2), force n/a (budget pending) (2691 N), bed 60% (real footprint 59% of bed) | placement check OK | VERDICT UNSOLVED | 00 BIGGUN Summoned Infernal WINGS - Chitubox supported; 01_Sekhaton Necromancer - 50mm Base; 01_The Flayed General - 25mm Base; 02_The Meat x3 - 40mm Base V2; Khalef - Vault Guardian - Presupported; Progenitor Pursuers x5 - 25mm Base; SV11 Zadkiel the Fallen - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 19 pcs, 171.3 mm; peel force (core coarse bound, sum of pieces) 2691 N at lift 60.0 mm/min; outer-zone spread 134.0 N, centre zone 231.1 N, centre of pull 3.8 mm off middle; smallest gap 4.0 mm; real footprint 59% of bed; cured-area envelope peak 2047 mm2 at 0.0 mm
+     zones N: back-left 286.8 | back-centre 298.6 | back-right 315.8 | middle-left 348.4 | middle-centre 231.1 | middle-right 306.8 | front-left 235.2 | front-centre 298.8 | front-right 369.2
+     first layer on plate (z min within 0.05 mm of 0): 19 of 19
+     empty radius at centre 0.2 mm (supports included) | small pieces 6 of 19 | smallest gap 4.0 mm
+P6: 17 pcs, 27-98 mm, ~13.2 h | allotment used: area 80% (peak 2583 mm2), force n/a (budget pending) (2792 N), bed 61% (real footprint 60% of bed) | placement check OK | VERDICT UNSOLVED | 02_ Sekhaton Coldbloods x3 - 32mm Base; 04_Sekhaton Primevil - 120mm Base; SV03 Gharl the Cleric - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 17 pcs, 97.6 mm; peel force (core coarse bound, sum of pieces) 2792 N at lift 60.0 mm/min; outer-zone spread 194.4 N, centre zone 321.6 N, centre of pull 1.2 mm off middle; smallest gap 4.0 mm; real footprint 60% of bed; cured-area envelope peak 2583 mm2 at 0.0 mm
+     zones N: back-left 291.7 | back-centre 346.2 | back-right 283.8 | middle-left 315.7 | middle-centre 321.6 | middle-right 405.0 | front-left 303.7 | front-centre 313.3 | front-right 210.7
+     first layer on plate (z min within 0.05 mm of 0): 17 of 17
+     empty radius at centre 1.8 mm (supports included) | small pieces 2 of 17 | smallest gap 4.0 mm
+P7: 14 pcs, 20-118 mm, ~15.8 h | allotment used: area 100% (peak 3230 mm2), force n/a (budget pending) (2919 N), bed 63% (real footprint 62% of bed) | placement check OK | VERDICT UNSOLVED | 08_Pierrot, the Flesh Artisan - 40mm Base; 09_Sewn Vessels x5 - 30mm Base; 10_The Fingers x5 - 25mm Base; Khepresh - The Vault Father - Presupported; Progenitor Pursuers x5 - 25mm Base; SV07 Neverishka Spawn of Ethrazek - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 14 pcs, 117.5 mm; peel force (core coarse bound, sum of pieces) 2919 N at lift 60.0 mm/min; outer-zone spread 110.0 N, centre zone 204.0 N, centre of pull 3.8 mm off middle; smallest gap 4.0 mm; real footprint 62% of bed; cured-area envelope peak 3230 mm2 at 38.0 mm
+     zones N: back-left 321.7 | back-centre 334.6 | back-right 288.5 | middle-left 337.9 | middle-centre 204.0 | middle-right 355.3 | front-left 350.0 | front-centre 328.6 | front-right 398.5
+     first layer on plate (z min within 0.05 mm of 0): 14 of 14
+     empty radius at centre 18.0 mm (supports included) | small pieces 5 of 14 | smallest gap 4.0 mm
+P8: 23 pcs, 20-103 mm, ~13.9 h | allotment used: area 75% (peak 2437 mm2), force n/a (budget pending) (2912 N), bed 61% (real footprint 62% of bed) | placement check OK | VERDICT UNSOLVED | 02_Soul Vessels x 5 - 25mm Base; 12_Infested Wolves x3 - 25x50mm Base; 13_Dark Elf Royal Guard - 40mm Base v2; Khepresh - The Vault Father - Presupported; Ossuary Crawler - Presupported; SV04 Isabetta of the Dawn - Presupported; SV11 Zadkiel the Fallen - Presupported; Taintblade Mercenary - 25mm Base; Vaultsworn Scarab - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 23 pcs, 102.9 mm; peel force (core coarse bound, sum of pieces) 2912 N at lift 60.0 mm/min; outer-zone spread 90.5 N, centre zone 275.9 N, centre of pull 2.0 mm off middle; smallest gap 4.0 mm; real footprint 62% of bed; cured-area envelope peak 2437 mm2 at 29.5 mm
+     zones N: back-left 372.5 | back-centre 300.7 | back-right 379.5 | middle-left 311.2 | middle-centre 275.9 | middle-right 288.9 | front-left 322.9 | front-centre 320.2 | front-right 340.5
+     first layer on plate (z min within 0.05 mm of 0): 23 of 23
+     empty radius at centre 1.0 mm (supports included) | small pieces 10 of 23 | smallest gap 4.0 mm
+P9: 17 pcs, 18-96 mm, ~12.9 h | allotment used: area 91% (peak 2935 mm2), force n/a (budget pending) (2695 N), bed 63% (real footprint 60% of bed) | placement check OK | VERDICT UNSOLVED | CP6 08 Talva - Claw of Winter - Presupported; P1; P2; P3; P4; SV06 Khadan Gith Swordmaster - Presupported; Vaultsworn Scarab - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 17 pcs, 95.6 mm; peel force (core coarse bound, sum of pieces) 2695 N at lift 60.0 mm/min; outer-zone spread 78.8 N, centre zone 274.7 N, centre of pull 0.9 mm off middle; smallest gap 4.0 mm; real footprint 60% of bed; cured-area envelope peak 2935 mm2 at 0.0 mm
+     zones N: back-left 279.0 | back-centre 332.7 | back-right 283.8 | middle-left 266.3 | middle-centre 274.7 | middle-right 345.1 | front-left 318.9 | front-centre 298.0 | front-right 296.3
+     first layer on plate (z min within 0.05 mm of 0): 17 of 17
+     empty radius at centre 0.2 mm (supports included) | small pieces 6 of 17 | smallest gap 4.0 mm
+P10: 9 pcs, 30-111 mm, ~14.9 h | allotment used: area 100% (peak 3226 mm2), force n/a (budget pending) (2026 N), bed 48% (real footprint 45% of bed) | placement check OK | VERDICT UNSOLVED | CP6 08 Talva - Claw of Winter - Presupported; CometLordMinis_287_Perpetual_Heavy_Knights; SV02 Baldgrim the Blacksmith - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 9 pcs, 110.7 mm; peel force (core coarse bound, sum of pieces) 2026 N at lift 60.0 mm/min; outer-zone spread 183.5 N, centre zone 34.9 N, centre of pull 4.4 mm off middle; smallest gap 4.0 mm; real footprint 45% of bed; cured-area envelope peak 3226 mm2 at 27.0 mm
+     zones N: back-left 193.8 | back-centre 251.2 | back-right 261.5 | middle-left 307.6 | middle-centre 34.9 | middle-right 302.3 | front-left 187.3 | front-centre 335.5 | front-right 152.0
+     first layer on plate (z min within 0.05 mm of 0): 9 of 9
+     empty radius at centre 16.5 mm (supports included) | small pieces 2 of 9 | smallest gap 4.0 mm
+P11: 19 pcs, 13-111 mm, ~14.9 h | allotment used: area 100% (peak 3232 mm2), force n/a (budget pending) (2058 N), bed 49% (real footprint 45% of bed) | placement check OK | VERDICT UNSOLVED | 04_Druid Triune - 25mm Base; CP6 08 Talva - Claw of Winter - Presupported; Creature Crusade - Immaculate; Ifrit, Genie of Fire; RevenantWarrior_Base_Supports; SV07 Neverishka Spawn of Ethrazek - Presupported; SV11 Zadkiel the Fallen - Presupported; Scavengers of Ruin; Scorpian Cataphract - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 19 pcs, 110.7 mm; peel force (core coarse bound, sum of pieces) 2058 N at lift 60.0 mm/min; outer-zone spread 136.1 N, centre zone 23.0 N, centre of pull 2.7 mm off middle; smallest gap 4.0 mm; real footprint 45% of bed; cured-area envelope peak 3232 mm2 at 25.0 mm
+     zones N: back-left 260.5 | back-centre 310.3 | back-right 183.6 | middle-left 174.3 | middle-centre 23.0 | middle-right 269.5 | front-left 274.6 | front-centre 258.7 | front-right 303.5
+     first layer on plate (z min within 0.05 mm of 0): 19 of 19
+     empty radius at centre 23.0 mm (supports included) | small pieces 9 of 19 | smallest gap 4.0 mm
+P12: 21 pcs, 22-100 mm, ~13.5 h | allotment used: area 96% (peak 3094 mm2), force n/a (budget pending) (2684 N), bed 59% (real footprint 57% of bed) | placement check OK | VERDICT UNSOLVED | 01_The Sepulchrite - 40mm Base; 09_Sewn Vessels x5 - 30mm Base; Ash Demon; Scarab Dragon - Presupported; Scorpian Cataphract - Presupported; Thrymgar - The Vault-Cracker - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 21 pcs, 100.4 mm; peel force (core coarse bound, sum of pieces) 2684 N at lift 60.0 mm/min; outer-zone spread 91.4 N, centre zone 232.1 N, centre of pull 4.5 mm off middle; smallest gap 4.0 mm; real footprint 57% of bed; cured-area envelope peak 3094 mm2 at 0.0 mm
+     zones N: back-left 313.9 | back-centre 310.9 | back-right 293.2 | middle-left 288.6 | middle-centre 232.1 | middle-right 311.3 | front-left 362.2 | front-centre 300.9 | front-right 270.8
+     first layer on plate (z min within 0.05 mm of 0): 21 of 21
+     empty radius at centre 0.2 mm (supports included) | small pieces 4 of 21 | smallest gap 4.0 mm
+P13: 24 pcs, 25-76 mm, ~10.2 h | allotment used: area 99% (peak 3215 mm2), force n/a (budget pending) (2531 N), bed 59% (real footprint 55% of bed) | placement check OK | VERDICT UNSOLVED | 02_The Meat x3 - 40mm Base V2; Daughter of Darkness; Fulsome Snailbrother - 32mm Base; Mounted_Warrior; SV11 Zadkiel the Fallen - Presupported; Vaultsworn Zealot - Presupported; Voidtouched Grafter - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 24 pcs, 75.8 mm; peel force (core coarse bound, sum of pieces) 2531 N at lift 60.0 mm/min; outer-zone spread 239.0 N, centre zone 208.2 N, centre of pull 7.2 mm off middle; smallest gap 4.0 mm; real footprint 55% of bed; cured-area envelope peak 3215 mm2 at 0.0 mm
+     zones N: back-left 358.5 | back-centre 282.0 | back-right 195.8 | middle-left 268.0 | middle-centre 208.2 | middle-right 426.8 | front-left 319.9 | front-centre 283.5 | front-right 187.9
+     first layer on plate (z min within 0.05 mm of 0): 24 of 24
+     empty radius at centre 9.2 mm (supports included) | small pieces 12 of 24 | smallest gap 4.0 mm
+P14: 13 pcs, 22-81 mm, ~11.0 h | allotment used: area 99% (peak 3217 mm2), force n/a (budget pending) (2124 N), bed 47% (real footprint 46% of bed) | placement check OK | VERDICT UNSOLVED | DreadBalthazar_Supports; Oceanvoid Scion - Presupported; SV05 Kalineas the Broken - Presupported; SV09 The Archvillain Statue - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 13 pcs, 81.3 mm; peel force (core coarse bound, sum of pieces) 2124 N at lift 60.0 mm/min; outer-zone spread 231.5 N, centre zone 19.6 N, centre of pull 4.9 mm off middle; smallest gap 4.0 mm; real footprint 46% of bed; cured-area envelope peak 3217 mm2 at 0.0 mm
+     zones N: back-left 345.2 | back-centre 239.9 | back-right 218.5 | middle-left 205.4 | middle-centre 19.6 | middle-right 385.6 | front-left 330.2 | front-centre 154.2 | front-right 225.6
+     first layer on plate (z min within 0.05 mm of 0): 13 of 13
+     empty radius at centre 37.9 mm (supports included) | small pieces 4 of 13 | smallest gap 4.0 mm
+P15: 23 pcs, 28-103 mm, ~13.8 h | allotment used: area 99% (peak 3218 mm2), force n/a (budget pending) (2502 N), bed 57% (real footprint 54% of bed) | placement check OK | VERDICT UNSOLVED | 01_The Coterie x3 - 40mm Base and 25mm Base; 02_Hellfiend Ascendant - 40mm Base; 03_Harrowborn x5 - 25mm Base; 10_Infested Abbot - 32mm Base; CP6 05 Sligo - Ice Troll King - Presupported; SV05 Kalineas the Broken - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 23 pcs, 102.7 mm; peel force (core coarse bound, sum of pieces) 2502 N at lift 60.0 mm/min; outer-zone spread 144.3 N, centre zone 165.7 N, centre of pull 3.7 mm off middle; smallest gap 4.0 mm; real footprint 54% of bed; cured-area envelope peak 3218 mm2 at 0.0 mm
+     zones N: back-left 297.0 | back-centre 268.6 | back-right 334.6 | middle-left 296.8 | middle-centre 165.7 | middle-right 205.6 | front-left 349.9 | front-centre 291.6 | front-right 291.9
+     first layer on plate (z min within 0.05 mm of 0): 23 of 23
+     empty radius at centre 13.9 mm (supports included) | small pieces 10 of 23 | smallest gap 4.0 mm
+P16: 10 pcs, 48-132 mm, ~17.8 h | allotment used: area 99% (peak 3200 mm2), force n/a (budget pending) (1897 N), bed 42% (real footprint 40% of bed) | placement check OK | VERDICT UNSOLVED | 04_Grafted Nemesis Knight - 50mm Base; Bust - Ghast, Demon Cleric; Kaimoku - Reef Knight - Presupported; RevenantWarrior_BowAttack_Supports; SV07 Neverishka Spawn of Ethrazek - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 10 pcs, 131.8 mm; peel force (core coarse bound, sum of pieces) 1897 N at lift 60.0 mm/min; outer-zone spread 264.0 N, centre zone 0.0 N, centre of pull 11.7 mm off middle; smallest gap 4.9 mm; real footprint 40% of bed; cured-area envelope peak 3200 mm2 at 0.0 mm
+     zones N: back-left 367.7 | back-centre 190.0 | back-right 357.4 | middle-left 194.3 | middle-centre 0.0 | middle-right 103.7 | front-left 276.5 | front-centre 195.3 | front-right 212.3
+     first layer on plate (z min within 0.05 mm of 0): 10 of 10
+     empty radius at centre 39.3 mm (supports included) | small pieces 1 of 10 | smallest gap 4.9 mm
+P17: 14 pcs, 25-130 mm, ~17.6 h | allotment used: area 99% (peak 3210 mm2), force n/a (budget pending) (2122 N), bed 46% (real footprint 45% of bed) | placement check OK | VERDICT UNSOLVED | 03_The Skinstalker - 25mm Base; SV07 Neverishka Spawn of Ethrazek - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 14 pcs, 130.2 mm; peel force (core coarse bound, sum of pieces) 2122 N at lift 60.0 mm/min; outer-zone spread 216.4 N, centre zone 39.0 N, centre of pull 5.0 mm off middle; smallest gap 4.0 mm; real footprint 45% of bed; cured-area envelope peak 3210 mm2 at 0.0 mm
+     zones N: back-left 334.3 | back-centre 183.7 | back-right 285.4 | middle-left 146.8 | middle-centre 39.0 | middle-right 279.0 | front-left 322.4 | front-centre 168.4 | front-right 363.2
+     first layer on plate (z min within 0.05 mm of 0): 14 of 14
+     empty radius at centre 3.1 mm (supports included) | small pieces 6 of 14 | smallest gap 4.0 mm
+P18: 11 pcs, 25-82 mm, ~11.1 h | allotment used: area 99% (peak 3207 mm2), force n/a (budget pending) (2047 N), bed 46% (real footprint 43% of bed) | placement check OK | VERDICT UNSOLVED | 02_The Haruspex - 25mm Base; Nerfu - Catacomb Sorcerer - Presupported; RevenantWarrior_SpearStandB_Supports; Sebau Worm - Presupported
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 11 pcs, 82.4 mm; peel force (core coarse bound, sum of pieces) 2047 N at lift 60.0 mm/min; outer-zone spread 181.1 N, centre zone 50.5 N, centre of pull 1.7 mm off middle; smallest gap 4.0 mm; real footprint 43% of bed; cured-area envelope peak 3207 mm2 at 0.0 mm
+     zones N: back-left 272.7 | back-centre 287.0 | back-right 281.3 | middle-left 135.3 | middle-centre 50.5 | middle-right 155.7 | front-left 274.8 | front-centre 273.5 | front-right 316.4
+     first layer on plate (z min within 0.05 mm of 0): 11 of 11
+     empty radius at centre 16.2 mm (supports included) | small pieces 3 of 11 | smallest gap 4.0 mm
+P19: 27 pcs, 24-84 mm, ~11.3 h | allotment used: area 91% (peak 2942 mm2), force n/a (budget pending) (2639 N), bed 62% (real footprint 57% of bed) | placement check OK | VERDICT UNSOLVED | 06_Remade Servitors x10 - 32mm Base; 10_The Fingers x5 - 25mm Base; 18_Remade Guardian - 40mm Base; Abyssal Juggernaut; Creature Crusade_Cantor Troopers x 6; Hellfiend A - 32mm Base; Hellfiend B - 32mm Base; Hellfiend C - 32mm Base; Sebau Worm - Presupported; Stitchfiend_Supports
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 27 pcs, 83.5 mm; peel force (core coarse bound, sum of pieces) 2639 N at lift 60.0 mm/min; outer-zone spread 83.9 N, centre zone 235.6 N, centre of pull 0.7 mm off middle; smallest gap 4.0 mm; real footprint 57% of bed; cured-area envelope peak 2942 mm2 at 0.0 mm
+     zones N: back-left 332.1 | back-centre 308.8 | back-right 252.3 | middle-left 274.5 | middle-centre 235.6 | middle-right 301.5 | front-left 277.6 | front-centre 336.3 | front-right 320.8
+     first layer on plate (z min within 0.05 mm of 0): 27 of 27
+     empty radius at centre 0.2 mm (supports included) | small pieces 11 of 27 | smallest gap 4.0 mm
+P20: 22 pcs, 31-93 mm, ~12.5 h | allotment used: area 100% (peak 3229 mm2), force n/a (budget pending) (2724 N), bed 61% (real footprint 59% of bed) | placement check OK | VERDICT UNSOLVED | 03_Grave Hounds x 3 - 25mm Base; 17_Remaker - 60mm Base; Creature Crusade_Cantor Troopers x 6; Hellfiend A - 32mm Base; Shrikes of Ruin; Stitchfiend_Supports
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 22 pcs, 92.9 mm; peel force (core coarse bound, sum of pieces) 2724 N at lift 60.0 mm/min; outer-zone spread 89.4 N, centre zone 247.0 N, centre of pull 1.7 mm off middle; smallest gap 4.0 mm; real footprint 59% of bed; cured-area envelope peak 3229 mm2 at 0.0 mm
+     zones N: back-left 269.3 | back-centre 320.7 | back-right 281.7 | middle-left 284.8 | middle-centre 247.0 | middle-right 358.7 | front-left 348.5 | front-centre 319.0 | front-right 294.1
+     first layer on plate (z min within 0.05 mm of 0): 22 of 22
+     empty radius at centre 6.2 mm (supports included) | small pieces 7 of 22 | smallest gap 4.0 mm
+P21: 13 pcs, 26-88 mm, ~11.8 h | allotment used: area 99% (peak 3211 mm2), force n/a (budget pending) (2172 N), bed 47% (real footprint 46% of bed) | placement check OK | VERDICT UNSOLVED | Highsea Slitherdrake - Presupported; Hoardlurk - Presupported; Scarab Spawn - Presupported; Shrikes of Ruin
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 13 pcs, 87.7 mm; peel force (core coarse bound, sum of pieces) 2172 N at lift 60.0 mm/min; outer-zone spread 174.3 N, centre zone 3.2 N, centre of pull 1.5 mm off middle; smallest gap 4.0 mm; real footprint 46% of bed; cured-area envelope peak 3211 mm2 at 0.0 mm
+     zones N: back-left 284.0 | back-centre 315.4 | back-right 298.1 | middle-left 214.0 | middle-centre 3.2 | middle-right 156.6 | front-left 324.2 | front-centre 246.1 | front-right 330.9
+     first layer on plate (z min within 0.05 mm of 0): 13 of 13
+     empty radius at centre 33.9 mm (supports included) | small pieces 0 of 13 | smallest gap 4.0 mm
+P22: 23 pcs, 20-96 mm, ~13.0 h | allotment used: area 100% (peak 3232 mm2), force n/a (budget pending) (2305 N), bed 53% (real footprint 50% of bed) | placement check OK | VERDICT UNSOLVED | 02_Wood Elf Remant -32mm Base; 03_Grave Hounds x 3 - 25mm Base; 03_Roothost Treants x2 - 40mm Base; 13_Infested Giant - 60mm Base; Creature Crusade_Cantor Troopers x 6; SV01 Alcuin the Witchunter - Presupported; SV10 Torgrasyl Draketh Champion - Presupported; Shrikes of Ruin; Stitchfiend_Supports
+     GPU layout search (direct pool placement, deterministic; Claude 11/14): 23 pcs, 96.3 mm; peel force (core coarse bound, sum of pieces) 2305 N at lift 60.0 mm/min; outer-zone spread 138.3 N, centre zone 35.5 N, centre of pull 2.2 mm off middle; smallest gap 4.0 mm; real footprint 50% of bed; cured-area envelope peak 3232 mm2 at 0.0 mm
+     zones N: back-left 277.8 | back-centre 274.1 | back-right 282.7 | middle-left 275.5 | middle-centre 35.5 | middle-right 210.7 | front-left 305.6 | front-centre 294.5 | front-right 349.0
+     first layer on plate (z min within 0.05 mm of 0): 23 of 23
+     empty radius at centre 19.8 mm (supports included) | small pieces 10 of 23 | smallest gap 4.0 mm
+models on more than one plate: 02_The Meat x3 - 40mm Base V2: P5/P13; 03_Grave Hounds x 3 - 25mm Base: P20/P22; 05_Untethered Souls x 7 - 25mm Base: P2/P3; 08_Pierrot, the Flesh Artisan - 40mm Base: P4/P7; 09_Sewn Vessels x5 - 30mm Base: P7/P12; 10_The Fingers x5 - 25mm Base: P7/P19; 12_Infested Wolves x3 - 25x50mm Base: P3/P4/P8; CP6 08 Talva - Claw of Winter - Presupported: P9/P10/P11; CometLordMinis_283_Silas_Night-Changed: P2/P3; Creature Crusade_Cantor Troopers x 6: P19/P20/P22; Hellfiend A - 32mm Base: P19/P20; Khepresh - The Vault Father - Presupported: P7/P8; P1: P1/P9; P2: P1/P9; P3: P1/P9; P4: P1/P9; Progenitor Pursuers x5 - 25mm Base: P5/P7; SV05 Kalineas the Broken - Presupported: P14/P15; SV07 Neverishka Spawn of Ethrazek - Presupported: P2/P7/P11/P16/P17; SV11 Zadkiel the Fallen - Presupported: P5/P8/P11/P13; Scorpian Cataphract - Presupported: P11/P12; Sebau Worm - Presupported: P18/P19; Shrikes of Ruin: P20/P21/P22; Stitchfiend_Supports: P19/P20/P22; Vaultsworn Scarab - Presupported: P8/P9; Vaultsworn Zealot - Presupported: P1/P13
+TABLE plate,pcs,small,empty_r_mm,centre_N,outer_spread_N,pct_allot,min_legal_spots: [[1, 15, 3, 4.8, 308.3, 172.7, 80.2, 10], [2, 14, 8, 0.2, 248.3, 86.1, 97.0, 5], [3, 13, 3, 4.4, 149.3, 114.6, 99.3, 972], [4, 7, 1, 55.5, 0.0, 321.1, 99.4, 132567], [5, 19, 6, 0.2, 231.1, 134.0, 63.3, 46], [6, 17, 2, 1.8, 321.6, 194.4, 79.9, 7], [7, 14, 5, 18.0, 204.0, 110.0, 99.9, 1243], [8, 23, 10, 1.0, 275.9, 90.5, 75.3, 1], [9, 17, 6, 0.2, 274.7, 78.8, 90.7, 23], [10, 9, 2, 16.5, 34.9, 183.5, 99.7, 40748], [11, 19, 9, 23.0, 23.0, 136.1, 99.9, 58817], [12, 21, 4, 0.2, 232.1, 91.4, 95.6, 961], [13, 24, 12, 9.2, 208.2, 239.0, 99.4, 828], [14, 13, 4, 37.9, 19.6, 231.5, 99.5, 53463], [15, 23, 10, 13.9, 165.7, 144.3, 99.5, 1884], [16, 10, 1, 39.3, 0.0, 264.0, 98.9, 109221], [17, 14, 6, 3.1, 39.0, 216.4, 99.2, 17715], [18, 11, 3, 16.2, 50.5, 181.1, 99.1, 77633], [19, 27, 11, 0.2, 235.6, 83.9, 90.9, 4], [20, 22, 7, 6.2, 247.0, 89.4, 99.8, 624], [21, 13, 0, 33.9, 3.2, 174.3, 99.3, 58137], [22, 23, 10, 19.8, 35.5, 138.3, 99.9, 35470]]
+carried to the next bundle: 1 pieces from 1 models
+PLATE VERDICTS: P1 UNSOLVED, P2 UNSOLVED, P3 UNSOLVED, P4 UNSOLVED, P5 UNSOLVED, P6 UNSOLVED, P7 UNSOLVED, P8 UNSOLVED, P9 UNSOLVED, P10 UNSOLVED, P11 UNSOLVED, P12 UNSOLVED, P13 UNSOLVED, P14 UNSOLVED, P15 UNSOLVED, P16 UNSOLVED, P17 UNSOLVED, P18 UNSOLVED, P19 UNSOLVED, P20 UNSOLVED, P21 UNSOLVED, P22 UNSOLVED
+FILM peak deflection per bed (um, from the core membrane; lower = gentler peel): P1 38622.4, P2 28479.0, P3 25674.0, P4 21007.0, P5 32599.3, P6 37228.4, P7 33119.7, P8 33745.3, P9 34170.1, P10 21447.3, P11 20985.1, P12 31669.0, P13 30090.5, P14 22194.5, P15 27902.6, P16 17972.4, P17 21970.6, P18 20756.2, P19 31045.1, P20 32270.6, P21 21082.3, P22 23111.0
+TIMES load masks 4.3s | place all pieces 40.9s | total 49s
+WRITE SUMMARY: beds written 22 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22] | beds failed 0
+BUNDLEDONE 22 plates, 324 printer-hours total, 49s

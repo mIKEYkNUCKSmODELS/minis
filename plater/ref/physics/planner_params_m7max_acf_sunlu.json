@@ -1,0 +1,345 @@
+{
+  "_schema": "PLANNER_PARAMS v1 (20261116). ONE file per printer+resin; read by mkm_planner_params.py. Every planner number that is not a solver output lives here, with meaning, unit, source and class. A value of null = PENDING: the planner never substitutes a number for it (a printability input that is pending makes the plate verdict UNSOLVED; a pending allotment is simply inactive).",
+  "printer": "anycubic_m7max",
+  "film": "film_acf",
+  "resin": "resin_sunlu_abslike",
+  "settings": "settings_mkm_mini",
+  "source_classes": [
+    "published",
+    "manufacturer spec",
+    "independent measurement",
+    "measured",
+    "derived",
+    "decided",
+    "planner heuristic",
+    "estimate",
+    "pending"
+  ],
+  "params": {
+    "solver_grid_pitch_mm": {
+      "role": "printability_input",
+      "value": {
+        "low": 0.125,
+        "central": 0.5,
+        "high": 0.5
+      },
+      "unit": "mm",
+      "meaning": "Pixel pitch of the layer masks handed to the physics solver (evaluate_layers). Numerical resolution, not a physical property.",
+      "source": "Grid-convergence study of the core (READ_FIRST.md status: dx 0.5/0.25/0.125 gave observed order 1.97, GCI_fine 0.24 %). 0.5 mm is the coarsest grid of that study; 0.125 mm the finest.",
+      "source_class": "derived"
+    },
+    "raft_band_mm": {
+      "role": "geometry",
+      "value": {
+        "low": 0.15,
+        "central": 0.3,
+        "high": 0.6
+      },
+      "unit": "mm",
+      "meaning": "Height band above the build plate that counts as the piece's raft / first-layer contact footprint (the 'rmask' whose area is loaded by the film). Was the literal 0.30 in compute_piece and mkm_gpuport.cp_masks.",
+      "source": "Pre-supported STLs carry a 0.3 mm raft: mkm_ringpack.hold_ratio/peel profile start 'round(0.3 + (j+1)*PEEL_DZ)' above the raft (plate_packer/mkm_ringpack.py:127). Range: half to twice that. Measure the raft of a representative STL to replace.",
+      "source_class": "decided"
+    },
+    "film_poisson": {
+      "role": "printability_input",
+      "value": {
+        "low": 0.4,
+        "central": 0.48,
+        "high": 0.48
+      },
+      "unit": "-",
+      "meaning": "Poisson ratio of the release film, needed by the solver's Foppl closure C = E t / (4 (1 - nu)). Overlaid onto film.poisson only while the film profile has it pending.",
+      "source": "Drive params_m7max_sunlu_abs.json (id 1s9RZBdmR7XDPrGtMU4vIfXZwifwq0zTj, generated 2026-11-16) film.poisson_ratio value 0.48 low 0.40 high 0.48: Goodfellow FEP copolymer film https://www.goodfellow.com/usa/fep-copolymer-film-group gives 0.48; low 0.40 is the file's own judgement for an ETFE-type film (no source). ACF base polymer not confirmed, so ESTIMATE. Replaces the earlier bulk-PET 0.37-0.44 bracket (round 1). Resolved 'central' policy = arithmetic mid of the bracket.",
+      "source_class": "estimate"
+    },
+    "plate_force_budget_N": {
+      "role": "allotment",
+      "value": null,
+      "unit": "N",
+      "meaning": "Total solver peel force a plate may carry (replaces the hand-set PULL = 194 N). Physically = bond strength x bonded area; needs resin.raft_plate_bond_MPa and the contact gap.",
+      "source": "PENDING. No published or measured value: resin.raft_plate_bond_MPa, film.contact_gap_um, film.adhesion_energy_J_m2 are pending in the profiles (MEASURE_SHEET_20261116.md). While null the force allotment is inactive; the solver verdict, not a cap, decides printability.",
+      "source_class": "pending"
+    },
+    "layer_area_budget_mm2": {
+      "role": "allotment",
+      "value": null,
+      "unit": "mm2",
+      "meaning": "Largest cured cross-section a plate may have at any layer (replaces the hand-set AREA = 5100 mm2).",
+      "source": "PENDING. Same dependency as plate_force_budget_N; 5100 mm2 had no source. While null the per-layer area allotment is inactive (areas are still tracked and reported).",
+      "source_class": "pending"
+    },
+    "packing_efficiency": {
+      "role": "search_heuristic",
+      "value": {
+        "low": 0.5,
+        "central": 0.7,
+        "high": 1.0
+      },
+      "unit": "-",
+      "meaning": "Fraction of the usable bed area that the sum of piece halos (footprint grown by gap/2) may occupy before the bed counts as full. Pure geometry of the search; legality of every placement is decided by the legal-origin test, not by this number. Was EFF = 0.70.",
+      "source": "Carried from planner pool8-pool10 (GB_EFF). Not physics. Mike 11/14 asked for ~98 % of the mechanical limit; set central to the value Mike approves.",
+      "source_class": "planner heuristic"
+    },
+    "min_plate_use_fraction": {
+      "role": "search_heuristic",
+      "value": {
+        "low": 0.3,
+        "central": 0.6,
+        "high": 0.98
+      },
+      "unit": "-",
+      "meaning": "A bed filled below this fraction of its binding allotment is emptied onto the other beds, else carried to the next bundle ('no sparse plates'). Was CARRY = 0.60.",
+      "source": "Carried from planner pool8-pool10 (GB_CARRY). Mike's rule: sparse plates are not acceptable (11/8, 11/10); the number is not decided by him.",
+      "source_class": "planner heuristic"
+    },
+    "raster_pitch_mm": {
+      "role": "search_heuristic",
+      "value": {
+        "low": 0.25,
+        "central": 0.5,
+        "high": 1.0
+      },
+      "unit": "mm",
+      "meaning": "Pitch R of the planner's placement raster (piece masks, legality FFTs, film grid). Was R = 0.5.",
+      "source": "Carried from planner v8 (R = 0.5 mm); a finer raster is slower, a coarser one rounds the gap. Convergence of the placement raster is not studied.",
+      "source_class": "planner heuristic"
+    },
+    "edge_margin_mm": {
+      "role": "search_heuristic",
+      "value": {
+        "low": 2.0,
+        "central": 3.0,
+        "high": 5.0
+      },
+      "unit": "mm",
+      "meaning": "Keep-out margin between any piece and the bed edge.",
+      "source": "plate_packer/mkm_ringpack.py:22 EDGE = 3.0 (MKM_EDGE); carried unchanged.",
+      "source_class": "decided"
+    },
+    "min_gap_mm": {
+      "role": "search_heuristic",
+      "value": {
+        "low": 2.0,
+        "central": 3.0,
+        "high": 6.0
+      },
+      "unit": "mm",
+      "meaning": "Minimum clear distance between pieces (placement legality). The achieved gap of a placed plate is checked against the grid-quantised value round(gap/R)*R, not gap-0.6.",
+      "source": "Carried from planner v8 (GB_GAP = 3.0); mkm_ringpack uses 2 mm (RDIL).",
+      "source_class": "planner heuristic"
+    },
+    "centre_clear_diam_mm": {
+      "role": "search_heuristic",
+      "value": {
+        "low": 0.0,
+        "central": 0.0,
+        "high": 40.0
+      },
+      "unit": "mm",
+      "meaning": "Diameter of the circle at the bed centre that the ring rounds close in on; large and medium pieces keep out of it, small minis may use the centre zone around it (Mike 11/14).",
+      "source": "Mike's 32 mm floor (planner comment 'CLEAR = Mike 32 mm floor'). [32 mm centre floor removed - Mike 2026-11-17 10:09, central set 32.0 -> 0.0 (undo: C:\\MKM_TMP\\backup\\centre_floor_20261117)]",
+      "source_class": "decided"
+    },
+    "tall_flag_mm": {
+      "role": "search_heuristic",
+      "value": 140.0,
+      "unit": "mm",
+      "meaning": "Models taller than this are FLAGGED in the big-model report (never held back from the plates).",
+      "source": "Mike: 'gate is 140 mm tall' (task brief 20261116; planner GB_TALL default 140).",
+      "source_class": "decided"
+    },
+    "big_model_allow_regex": {
+      "role": "search_heuristic",
+      "value": "dragon|wyrm|drake|wyvern|tarrasque|tarasque|kraken",
+      "unit": "regex",
+      "meaning": "Model names that are big on purpose: listed as 'ok (allowed)' instead of FLAG.",
+      "source": "Mike 11/14: dragons, tarrasques and krakens are OK at that size (memory + planner GB_ALLOW).",
+      "source_class": "decided"
+    },
+    "round_quantiles": {
+      "role": "search_heuristic",
+      "value": [
+        0.6667,
+        0.3333
+      ],
+      "unit": "-",
+      "meaning": "Quantiles of piece size that split the pool into the large / medium / small rounds (equal thirds).",
+      "source": "Mike 11/14 12:42: rounds large -> medium -> small; thirds are the neutral split.",
+      "source_class": "decided"
+    },
+    "seconds_per_layer": {
+      "role": "report_only",
+      "value": {
+        "low": 13.64,
+        "central": 14.56,
+        "high": 15.49
+      },
+      "unit": "s",
+      "meaning": "Wall time per layer, used only for the printer-hours estimate in the summary. Was SPL.",
+      "source": "Two completed MKM prints: 40733 s / 2987 layers = 13.64 and 38679 s / 2497 layers = 15.49 (planner v8 comment); central = mean.",
+      "source_class": "measured"
+    },
+    "film_self_compliance_rel_tol": {
+      "role": "printability_input",
+      "value": 0.02,
+      "unit": "-",
+      "meaning": "Relative tolerance of the film self-compliance lattice: the lattice spacing is refined until the interpolated map moves by less than this fraction (replaces the hand-set blob sigma 3 mm / stride 16).",
+      "source": "Numerical tolerance, same role as the core's own tolerances (GCI 0.24 %). Decided 2 % of the map's peak: measured on the real film domain (1 mm raster, 20x20 mm footprint, central pretension) 80 solves give 4.8 %, 200 solves give 0.73 % (work/sc_real.py). The term only ranks candidate positions (film energy), it decides no printability; Mike may tighten.",
+      "source_class": "decided"
+    },
+    "max_plates_per_model": {
+      "role": "search_heuristic",
+      "value": 3,
+      "unit": "plates",
+      "meaning": "A figure (body + its own base) is placed on ONE plate; only if no single plate can hold it may it be split, over at most this many plates.",
+      "source": "Mike 11/14: OK to split models across up to 3 plates total to fill plates to ~98 % of the mechanical limit; 4 only when absolutely necessary (memory /areas/mikey-knucks-models).",
+      "source_class": "decided"
+    },
+    "centre_zone_open_to_small": {
+      "role": "search_heuristic",
+      "value": true,
+      "unit": "bool",
+      "meaning": "Pieces of the SMALL round may be placed inside the centre-clear circle; large and medium pieces never are (the circle is their keep-out).",
+      "source": "Mike's placement rule as given in the 20261116 task brief: rounds large -> medium -> small in concentric rings, small minis may be in the centre zone (Mike 11/14: rings close in on the 32 mm circle).",
+      "source_class": "decided"
+    },
+    "film_adhesion_energy_J_m2": {
+      "role": "printability_input",
+      "value": {
+        "low": 0.035,
+        "central": 0.043,
+        "high": 0.06
+      },
+      "unit": "J/m2",
+      "meaning": "Work of adhesion G of the resin/film interface = area under the cohesive traction-separation law (film.adhesion_energy_J_m2).",
+      "source": "Drive params_m7max_sunlu_abs.json (id 1s9RZBdmR7XDPrGtMU4vIfXZwifwq0zTj, generated 2026-11-16) interface.work_of_adhesion_mJ_m2 43 (35-60 mJ/m2), Young-Dupre Wa = gamma(1+cos theta) with gamma 32 mN/m (IBOA SR506C, Arkema TDS) and theta 70 deg (engrXiv 1080, Formlabs methacrylate on unsanded FEP); proxy resin and proxy film, so ESTIMATE. The file notes this is a thermodynamic floor, not the practical separation resistance.",
+      "source_class": "estimate"
+    },
+    "film_contact_gap_um": {
+      "role": "printability_input",
+      "value": {
+        "low": 10.0,
+        "central": 30.0,
+        "high": 100.0
+      },
+      "unit": "um",
+      "meaning": "Resin gap h0 between the film and the cured layer face at lift start (film.contact_gap_um); squeeze-film force scales steeply with it.",
+      "source": "Mike 11/15: the gap is the layer height (0.03 mm now), dynamic with layer height (central = layer height, set in apply_profile_overlay); plus the 10/25/50/100 um sweep, still required. Not a measured gap; five-pad measurement pending. [was: Mike-approved 11/15 ESTIMATE SWEEP, central 30 um as an assumption] Task 0237 corrects the comparison report. Five-pad measurement pending.",
+      "source_class": "estimate",
+      "tracks_layer_height": true,
+      "sweep_values_um": [
+        10,
+        25,
+        50,
+        100
+      ]
+    },
+    "film_interface_strength_MPa": {
+      "role": "printability_input",
+      "value": {
+        "low": 0.012,
+        "central": 0.0565,
+        "high": 0.101325
+      },
+      "unit": "MPa",
+      "meaning": "Peak cohesive traction sigma_max of the interface law (film.interface_strength_MPa); caps the pointwise pull stress.",
+      "source": "NOT published. Bounds derived here [INFERRED]: LOW = AmeraLabs ACF peel stress slope 12 kPa (Drive params interface.acf_peel_stress_slope_kPa; measured F/A at peak cannot exceed sigma_max pointwise, so sigma_max >= 12 kPa); HIGH = ambient pressure 101.325 kPa (a cavitating/suction-type separation cannot sustain more tension than p_amb - p_vap; physical cap, not a measurement). ESTIMATE bracket; no point value is claimed.",
+      "source_class": "estimate"
+    },
+    "film_stretch_closure": {
+      "role": "printability_input",
+      "value": "biaxial",
+      "unit": "-",
+      "meaning": "Film stretching closure of the membrane (film.stretch_closure): 'none' | 'biaxial' | 'uniaxial' (mkm_coupled.stretch_coeff).",
+      "source": "Core law 3 (mkm_physics.py:733, Foppl-von Karman mean-strain closure T = T0 + E t <|grad w|^2>/(4(1-nu)), equibiaxial) chosen as the full-physics default; the planner sweeps all three (categorical_alternatives) at the governing layer. No measurement exists; ESTIMATE.",
+      "source_class": "estimate",
+      "categorical_alternatives": [
+        "none",
+        "uniaxial"
+      ]
+    },
+    "resin_temperature_C": {
+      "role": "printability_input",
+      "value": 30.0,
+      "unit": "C",
+      "meaning": "Resin temperature at which viscosity applies (resin.temperature_C).",
+      "source": "Mike 11/15 decision: vat heater set point 30 C (Drive params process.vat_heater_setpoint_C, tag MIKE; Anycubic spec 20-40 C). The film-level temperature may be 25-30 C (Drive process.resin_temp_at_film_C, ASSUMED): that uncertainty is carried by the viscosity bracket below.",
+      "source_class": "decided"
+    },
+    "resin_viscosity_30C_mPa_s": {
+      "role": "printability_input",
+      "value": {
+        "low": 139.0,
+        "central": 230.0,
+        "high": 339.0
+      },
+      "unit": "mPa*s at 30 C",
+      "meaning": "Resin viscosity at the heater set point (resin.viscosity_points_mPa_s, evaluated at resin.temperature_C = 30 C).",
+      "source": "Drive params_m7max_sunlu_abs.json (id 1s9RZBdmR7XDPrGtMU4vIfXZwifwq0zTj, generated 2026-11-16) resin.viscosity_30C_mPa_s 230 (139-339): Sunlu ABS-Like TDS 200-400 mPa.s at 25 C (cdn.shopify.com SUNLU_ABS-Like_UV_Resin_Data_Sheet.pdf) carried to 30 C by Arrhenius with Ea 25-55 kJ/mol (aggregator rule of thumb, no Sunlu second temperature published). Seller pages list 300-600 at 25 C (PLATER_EQUATIONS B17): upper tail not covered. ESTIMATE.",
+      "source_class": "estimate"
+    },
+    "resin_surface_tension_N_m": {
+      "role": "printability_input",
+      "value": {
+        "low": 0.028,
+        "central": 0.032,
+        "high": 0.04
+      },
+      "unit": "N/m",
+      "meaning": "Resin surface tension (resin.surface_tension_N_m).",
+      "source": "Drive params_m7max_sunlu_abs.json (id 1s9RZBdmR7XDPrGtMU4vIfXZwifwq0zTj, generated 2026-11-16) resin.surface_tension_mN_m 32 (28-40): Arkema SR506C isobornyl acrylate 32 mN/m at 20 C, a common ABS-like monomer; mixture value not published. ESTIMATE.",
+      "source_class": "estimate"
+    },
+    "resin_green_tensile_MPa": {
+      "role": "printability_input",
+      "value": {
+        "low": 0.0,
+        "central": 17.0,
+        "high": 34.0
+      },
+      "unit": "MPa",
+      "meaning": "Green (uncured-state, pre-post-cure) tensile strength used for the island / layer / neck checks (resin.green_tensile_MPa).",
+      "source": "UPPER BOUND ONLY. HIGH 34 MPa = Sunlu ABS-Like data sheet tensile strength (ISO 527, post-cured; Drive params resin.cured_modulus_MPa how-field): green strength is lower. LOW 0 = no published lower bound exists. Consequence by construction: a plate can FAIL only if a layer needs more than 34 MPa even at its best-case force; it can never PASS until green tensile is measured. The earlier 13-38 MPa 'prior' is listed in INPUTS_RESEARCH_20261114.md as an unsourced AI value and is NOT used.",
+      "source_class": "estimate"
+    }
+  },
+  "profile_overlay": {
+    "film.poisson": "film_poisson",
+    "film.adhesion_energy_J_m2": "film_adhesion_energy_J_m2",
+    "film.contact_gap_um": "film_contact_gap_um",
+    "film.interface_strength_MPa": "film_interface_strength_MPa",
+    "film.stretch_closure": "film_stretch_closure",
+    "resin.surface_tension_N_m": "resin_surface_tension_N_m",
+    "resin.green_tensile_MPa": "resin_green_tensile_MPa"
+  },
+  "pending_measurements_blocking_a_verdict": [
+    "resin.raft_plate_bond_MPa (no published value or bound; bottom-layer checks stay UNSOLVED)",
+    "resin.green_tensile_MPa lower end (bracket 0-34: PASS impossible until measured)",
+    "film.contact_gap_um (5-pad test), film.interface_strength_MPa, film.adhesion_energy_J_m2 (estimates, ranges swept)",
+    "machine.film_window_mm, film.pretension (existing brackets; Drive file lists tension 1000-2700 N/m which is OUTSIDE the profile bracket 3661-8213: conflict, measure with tap tone)",
+    "resin.vapor_pressure_Pa (pending; core uses p_vap=0, the documented upper bound on suction), machine.z_stiffness_N_per_m (pending; rigid Z), machine.film_window_offset_mm (pending; centred)"
+  ],
+  "profile_overlay_replace": {
+    "resin.temperature_C": "resin_temperature_C",
+    "resin.viscosity_points_mPa_s": "resin_viscosity_30C_mPa_s"
+  },
+  "corner_sweep_fields": [
+    "film.youngs_modulus_MPa",
+    "film.poisson",
+    "film.density_kg_m3",
+    "film.pretension_N_per_m",
+    "film.adhesion_energy_J_m2",
+    "film.contact_gap_um",
+    "film.interface_strength_MPa",
+    "film.stretch_closure",
+    "resin.viscosity_points_mPa_s",
+    "machine.film_window_mm"
+  ],
+  "corner_sweep_fields_note": "Every profile field that the core reads and that the profile holds as a bracket (or categorical alternatives) is ranged. film.thickness_um is a single independent measurement and is not ranged; film.tap_tone_Hz is only read when pretension is pending.",
+  "gap_sweep_required_um": [
+    10,
+    25,
+    50,
+    100
+  ]
+}
