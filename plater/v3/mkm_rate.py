@@ -273,14 +273,14 @@ def _labels(cur, owner, cap=20000, check=8):
     mx = torch.where(seed, owner[None].float(), torch.zeros((), device=cur.device)).expand_as(cur).clone()
     mn = torch.where(seed, owner[None].float(), torch.full((), big, device=cur.device)).expand_as(cur).clone()
     it = 0
+    zero = torch.zeros((), device=cur.device); bigt = torch.full((), big, device=cur.device)
     while it < cap:
-        for _ in range(check):
-            mx2 = torch.where(cur, _prop(mx, "max"), torch.zeros((), device=cur.device))
-            mn2 = torch.where(cur, _prop(mn, "min"), torch.full((), big, device=cur.device))
+        mx0, mn0 = mx, mn
+        for _ in range(check):                                    # `check` real propagation steps per host sync
+            mx = torch.where(cur, _prop(mx, "max"), zero)
+            mn = torch.where(cur, _prop(mn, "min"), bigt)
         it += check
-        done = torch.equal(mx2, mx) and torch.equal(mn2, mn)
-        mx, mn = mx2, mn2
-        if done:
+        if torch.equal(mx, mx0) and torch.equal(mn, mn0):
             break
     mn = torch.where(mx > 0, mn, torch.zeros((), device=cur.device))
     return mx.long(), mn.long()
@@ -412,6 +412,11 @@ def _scan(store, recipe, boxes, device, batch, log):
     dy0 = ((ys_w + by) / (DS * pmm[1])).clamp(min=0); dy1 = ((by - ys_w) / (DS * pmm[1])).clamp(min=0)
     dd = torch.stack([dx0[None, :].expand(H, W), dx1[None, :].expand(H, W), dy0[:, None].expand(H, W), dy1[:, None].expand(H, W)])
     s = dd.min(0).values.floor().long(); sdir = dd.argmin(0)
+    def _static(mask):                                            # flat pixel list of a fixed full-res region + its owners
+        idx = mask.reshape(-1).nonzero(as_tuple=False)[:, 0]
+        return idx, own_f.reshape(-1)[idx]
+    st_out, st_edge, st_gap = _static(~bed), _static(edge), _static(gapb)
+    del bed, edge, gapb, cnt_f
     heat = torch.zeros((Hf, Wf), dtype=torch.int32, device=dev)
     keys = ("cured", "float", "outside", "edge", "gap", "unattr", "merge", "start", "land", "end", "fstep", "lstep")
     acc = {k: [] for k in keys}
@@ -423,15 +428,18 @@ def _scan(store, recipe, boxes, device, batch, log):
         i1 = min(N, i0 + batch); B = i1 - i0
         full = store.read_batch(i0, i1, device=dev).bool()
         heat += full.sum(0, dtype=torch.int32)
-        bidF = torch.arange(B, device=dev).view(B, 1, 1)
-        def per_model(mask_full):
-            k = (bidF * K + own_f[None])[mask_full]
-            return torch.bincount(k, minlength=B * K).view(B, K)
-        outside = per_model(full & ~bed[None]); edg = per_model(full & edge[None]); gp = per_model(full & gapb[None])
-        xf = full[:, None].float()
-        cur = F.max_pool2d(xf, DS)[:, 0] > 0                       # A3 connectivity grid
-        half = F.avg_pool2d(xf, DS)[:, 0] >= 0.5                  # A3 cavity grid (mkm_uvtools_gpu)
-        del xf, full
+        fullv = full.reshape(B, -1)
+        def per_model(st):                                         # cured pixels per model inside one fixed region
+            idx, own = st
+            o = torch.zeros((B, K), dtype=torch.int32, device=dev)
+            if idx.numel():
+                o.index_add_(1, own, fullv[:, idx].to(torch.int32))
+            return o
+        outside = per_model(st_out); edg = per_model(st_edge); gp = per_model(st_gap)
+        cnt = full.view(B, H, DS, W, DS).sum(dim=(2, 4), dtype=torch.uint8)   # cured printer pixels per working cell (no float copy)
+        cur = cnt > 0                                              # A3 connectivity grid (= max-pool > 0)
+        half = cnt.to(torch.int32) * 2 >= DS * DS                  # A3 cavity grid (= avg-pool >= 0.5, as mkm_uvtools_gpu)
+        del cnt, fullv, full
         lab, labmin = _labels(cur, own_w)
         bid = torch.arange(B, device=dev).view(B, 1, 1).expand(B, H, W)
         cured = torch.bincount((bid * K + lab)[cur], minlength=B * K).view(B, K)
