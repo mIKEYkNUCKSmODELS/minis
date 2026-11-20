@@ -130,7 +130,7 @@ def slice_plate(recipe_path, store_dir, batch=64, device="cuda"):
                   recipe_sha256=rsha)
     for i0 in range(0, n_layers, batch):
         i1 = min(n_layers, i0 + batch)
-        if hasattr(GP, "temp_gate"):
+        if d.type == "cuda" and hasattr(GP, "temp_gate"):   # VRAM/heat guard is a GPU guard
             GP.temp_gate()
         masks = torch.zeros((i1 - i0, H, W), dtype=torch.bool, device=d)
         for k, i in enumerate(range(i0, i1)):

@@ -1,7 +1,7 @@
 """MKM plater v3 - shared paths and constants (laptop MKM). Values are Mike's constants; do not tune them."""
 import os, subprocess, sys
 
-UVTOOLS = r"C:\Program Files\UVtools\UVtoolsCmd.exe"
+UVTOOLS = os.environ.get("MKM_UVTOOLS", r"C:\Program Files\UVtools\UVtoolsCmd.exe")
 PY = r"C:\Users\confi\AI\ComfyUI_windows_portable\python_embeded\python.exe"
 GATE = r"F:\MKM_STAGE\MKM_GATE\mkm_gate.cmd"
 REF_TREE = os.environ.get("MKM_GPU_SCAN", r"C:\MKM_TMP\plater_one_build_20261117\tree\gpu_scan")

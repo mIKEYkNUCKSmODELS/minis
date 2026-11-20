@@ -119,10 +119,9 @@ def main(argv=None):
                     mkm_uv_check.parity(pm7m, uv)
                 ps["uv"] = "done"; save_state(run, st)
             if ps.get("rate") != "done":
-                log(run, "%s: rating + heat map" % p)
+                log(run, "%s: rating + heat map (rate_plate writes the picture)" % p)
                 os.makedirs(rate, exist_ok=True)
-                r = mkm_rate.rate_plate(os.path.join(layout, p), store, uv, rate)
-                mkm_rate.heat_png(store, os.path.join(rate, p + "_heat.png"))
+                r = mkm_rate.rate_plate(os.path.join(layout, p), store, uv, rate, device=a.device)
                 ps["rating"] = r.get("rating")
                 ps["rate"] = "done"; save_state(run, st)
             log(run, "%s: %s" % (p, ps.get("rating")))

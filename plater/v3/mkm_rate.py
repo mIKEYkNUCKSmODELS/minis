@@ -141,6 +141,10 @@ def _uv_layers(d, typ):
         rows = L.get(typ)
         if rows is None:
             return None
+        if isinstance(rows, dict):                          # mkm_uv_check.parse_issues shape: {layers_affected, first_layer, last_layer, layer_list}
+            rows = rows.get("layer_list")
+            if rows is None:
+                return None
         for v in rows:
             add(v)
     elif isinstance(L, list):
