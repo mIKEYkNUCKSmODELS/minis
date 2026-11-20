@@ -71,14 +71,13 @@ ORDER = {"defect": 0, "END": 1, "LANDING": 2, "START": 3, "warning": 4}      # m
 # ------------------------------------------------------------------ rating mapping (pure, no torch)
 def rating_from(defects, events):
     """Contract mapping (PROPOSAL). WILL NOT PRINT = a verified hard-gate defect survives repair; RISKY = a hard-gate hit
-    that could not be verified either way, or a shared last loop (END); LIKELY WITH NOTES = hard gate clean, notes or band
-    events left; LIKELY = nothing."""
+    that could not be verified either way; LIKELY WITH NOTES = hard gate clean, notes or band events left (any class,
+    END included: merged rule 11:35 "a plate whose hard gate is clean ... is a GO with the leftover event written on it");
+    LIKELY = nothing."""
     hard = [d for d in defects if not d.get("warning")]
     if any(d.get("verified") is True and d.get("survives_repair") is True for d in hard):
         return "WILL NOT PRINT"
     if any(d.get("verified") is not True or d.get("survives_repair") is None for d in hard):
-        return "RISKY"
-    if any(e.get("event") == "END" for e in events):
         return "RISKY"
     if defects or events:
         return "LIKELY WITH NOTES"
