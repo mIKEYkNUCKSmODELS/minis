@@ -13,6 +13,7 @@ import argparse, glob, json, os, shutil, sys, threading, time, traceback
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import mkm_v3_config as C
+from mkm_gpu_runtime import require_cuda, GPURequiredError
 
 STEPS = ("slice", "pm7m", "uv", "rate")
 
@@ -74,6 +75,12 @@ def main(argv=None):
     if C.obs_running():
         log(run, "OBS is running (a show). Heavy jobs are not started. Re-run when the show is over.")
         return 2
+
+    try:
+        require_cuda(a.device)
+    except GPURequiredError as e:
+        log(run, "CUDA REQUIRED: %s. No CPU fallback; no plate started." % e)
+        return 3
 
     import mkm_plate_slice, mkm_pm7m_build, mkm_uv_check, mkm_rate
 
@@ -144,7 +151,9 @@ def main(argv=None):
         if ps.get("uv") != "done":
             if p == parity_plate or a.gpu_all:
                 log(run, "%s: GPU detectors vs UVtools (parity, unproven)" % p)
-                mkm_uv_check.parity(ps["pm7m_path"], uv)
+                parity_result = mkm_uv_check.parity(ps["pm7m_path"], uv)
+                if not isinstance(parity_result, dict) or parity_result.get("status") != "OK":
+                    raise RuntimeError("GPU parity failed (no CPU substitute): %s" % (parity_result or "no result"))
             mark(p, uv="done")
         if ps.get("rate") != "done":
             log(run, "%s: rating + heat map (rate_plate writes the picture)" % p)
