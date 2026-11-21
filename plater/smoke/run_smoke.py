@@ -40,6 +40,7 @@ def jload(p):
 def env():
     e = dict(os.environ)
     e["MKM_UVTOOLS"] = os.path.join(HERE, "fake_uvtools.py")
+    e["MKM_SYNTHETIC_TEST_ONLY"] = "1"  # fixture-only CPU verification, NEVER production fallback
     e["MKM_GPU_SCAN"] = os.path.join(ROOT, "plater", "ref", "gpu_scan")
     e["MKM_PHYS_DIR"] = os.path.join(ROOT, "plater", "ref", "physics")
     # ref/physics looks for profiles_filled/, which is not in the tree; the param file sits beside the module
