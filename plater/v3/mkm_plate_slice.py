@@ -35,6 +35,7 @@ import time
 import numpy as np
 
 import mkm_v3_config as C
+from mkm_gpu_runtime import require_cuda, cuda_batch
 
 
 def _sha256(path):
@@ -109,6 +110,7 @@ def slice_plate(recipe_path, store_dir, batch=64, device="cuda"):
         except (ValueError, OSError):
             pass
 
+    require_cuda(device)
     import torch
     import mkm_gpuport as GP
     if device == "cuda":
@@ -124,6 +126,10 @@ def slice_plate(recipe_path, store_dir, batch=64, device="cuda"):
         raise ValueError("plate has no height (top %.4f mm)" % top)
     slicers = [GP.GSlicer(T, None, d) for T in tris]         # sorts by zmin on the GPU, as GSlicer expects
     del tris
+    if d.type == "cuda":
+        selected = cuda_batch(batch, width=W, height=H, torch_module=torch)
+        print("[slice] CUDA required; VRAM-sized batch %d/%d layers" % (selected, batch), flush=True)
+        batch = selected
 
     st = SliceStore(store_dir, "w")
     st.write_meta(res=C.RES, pixel_mm=C.PIXEL_MM, layer_mm=C.LAYER_MM, n_layers=n_layers, mirror_x=C.MIRROR_X, origin_mm=origin,
