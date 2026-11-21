@@ -55,6 +55,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 if HERE not in sys.path:
     sys.path.insert(0, HERE)
 import mkm_v3_config as C            # puts REF_TREE (gpu_scan) on sys.path; no torch here
+from mkm_gpu_runtime import require_cuda, cuda_batch
 
 BED_MM = (298.0, 164.0)              # A2
 DS = 4                               # A3
@@ -666,13 +667,18 @@ def rate_plate(plate_dir_layout, store_dir, uv_dir, out_dir, device=None, batch=
              uvtools=dict(raw=dict(status=(raw or {}).get("status"), counts=(raw or {}).get("counts")),
                           repaired=dict(status=(rep or {}).get("status"), counts=(rep or {}).get("counts")), gpu_issues=bool(gpu_rep)),
              errors=[])
+    # A production rating MUST execute on CUDA. Hardware failure is a failed stage,
+    # never a fabricated LIKELY/RISKY rating from a silent CPU fallback.
+    dev = require_cuda(device or "cuda")
     defects, events, heat, cured_mm2 = [], [], None, None
     try:
         import torch
-        dev = device or ("cuda" if torch.cuda.is_available() else "cpu")
         from mkm_slice_store import SliceStore
         store = SliceStore(store_dir)
         boxes = _model_boxes(recipe, os.path.join(out_dir, "model_bbox_cache.json"))
+        if dev == "cuda":
+            sz = store.meta.get("res", C.RES)
+            batch = cuda_batch(batch, width=int(sz[0]), height=int(sz[1]), torch_module=torch)
         out, heat, geo = _scan(store, recipe, boxes, dev, batch, log)
         defects, events, models = _defects_events(out, pieces, recipe)
         r["uvtools_unconfirmed"] = _verify_uv(defects, raw, rep, gpu_rep, store.n_layers)
