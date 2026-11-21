@@ -23,11 +23,16 @@ def uv_check(pm7m, out, gate=False):
     time.sleep(0.15); active["uv"] -= 1
     if ("uv", p) in cfg["fail"]: raise OSError("uvtools died")
     return {"status": "OK"}
-uv.uv_check = uv_check; uv.parity = lambda pm7m, out: rec("parity", plate(out))
+uv.uv_check = uv_check; uv.parity = lambda pm7m, out: (rec("parity", plate(out)) or {"status": "OK"})
 rt = types.ModuleType("mkm_rate")
 def rate_plate(lay, store, uvd, rate, device=None): rec("rate", plate(lay), threading.current_thread() is threading.main_thread()); return {"rating": "LIKELY"}
 rt.rate_plate = rate_plate; rt.summarize = lambda run: rec("summary")
 for m in (ps, pb, uv, rt): sys.modules[m.__name__] = m
+# Isolated pipeline tests stub hardware preflight; test_gpu_runtime.py checks the real fail-closed policy.
+gpu = types.ModuleType("mkm_gpu_runtime")
+gpu.GPURequiredError = RuntimeError
+gpu.require_cuda = lambda device="cuda": device
+sys.modules["mkm_gpu_runtime"] = gpu
 import plate_all as PA, mkm_v3_config as C
 n = {"k": 0}
 def obs():
