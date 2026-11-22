@@ -1,0 +1,186 @@
+diff --git a/v3/mkm_accounting.py b/v3/mkm_accounting.py
+index 1c13bde..b3ba8ec 100644
+--- a/v3/mkm_accounting.py
++++ b/v3/mkm_accounting.py
+@@ -12,6 +12,7 @@ effective_settings(planner_out) -> what the planner REALLY used, read from its o
+   fill_min_pct per plate (R14 planner), edge margin need per plate (hard_checks), so a stale label ('0.5 mm', 'carry off') cannot hide.
+ """
+ import glob, json, os
++from collections import Counter
+ 
+ 
+ def _norm(p):
+@@ -45,27 +46,29 @@ def model_accounting(pieces_json, planner_out):
+     if not isinstance(pieces, list):
+         return ["pieces.json unreadable or not a list: %s" % pieces_json]
+     planner_out = os.path.abspath(planner_out)
+-    placed, plate_dirs = set(), []
++    placed, plate_dirs = Counter(), []      # G1: Counter, not set - a path pieces.json lists k times must be placed/carried k times in total
+     for rp in sorted(glob.glob(os.path.join(planner_out, "P*", "recipe.json"))):
+         plate_dirs.append(os.path.dirname(rp))
+         for s in (_jload(rp, {}) or {}).get("sources") or []:
+             if s.get("path"):
+-                placed.add(_norm(s["path"]))
+-    carried_paths, carried_sf = set(), set()
++                placed[_norm(s["path"])] += 1
++    carried_paths, carried_sf = Counter(), Counter()
+     for r in _jload(os.path.join(planner_out, "POOL_CARRY.json"), []) or []:
+         if r.get("path"):
+-            carried_paths.add(_norm(r["path"]))
++            carried_paths[_norm(r["path"])] += 1
+     for r in _jload(os.path.join(planner_out, "LONE_CARRY.json"), []) or []:
+-        carried_sf.add((str(r.get("set")), str(r.get("file"))))
+-    known = set()
++        carried_sf[(str(r.get("set")), str(r.get("file")))] += 1
++    want, sf_of = Counter(), {}
+     for r in pieces:
+-        pth = _norm(r["path"]); known.add(pth); sf = (str(r.get("set")), str(r.get("file")))
+-        isp, isc = pth in placed, (pth in carried_paths or sf in carried_sf)
+-        if not isp and not isc:
+-            problems.append("model not accounted for (neither placed nor carried): %s / %s" % (r.get("set"), r.get("file")))
+-        if isp and isc:
+-            problems.append("model both placed and carried: %s / %s" % (r.get("set"), r.get("file")))
+-    for p in sorted(placed - known):
++        want[_norm(r["path"])] += 1; sf_of.setdefault(_norm(r["path"]), (str(r.get("set")), str(r.get("file"))))
++    known = set(want)
++    for pth, k in sorted(want.items()):
++        sf = sf_of[pth]; npl = placed.get(pth, 0); nca = carried_paths.get(pth, 0) + carried_sf.get(sf, 0)
++        if npl + nca < k:
++            problems.append("model not accounted for (pieces.json lists it %d time(s), placed %d, carried %d): %s / %s" % (k, npl, nca, sf[0], sf[1]))
++        if npl and nca:
++            problems.append("model both placed and carried: %s / %s" % sf)
++    for p in sorted(set(placed) - known):
+         problems.append("placed source not in pieces.json: %s" % p)
+     bf = _jload(os.path.join(planner_out, "BED_FAILURES.json"))
+     if bf is None:
+diff --git a/v3/mkm_accounting_gate.py b/v3/mkm_accounting_gate.py
+new file mode 100644
+index 0000000..f4dd6c2
+--- /dev/null
++++ b/v3/mkm_accounting_gate.py
+@@ -0,0 +1,46 @@
++"""G2/G3/G4 helpers (verifier blocker 13): the accounting decision, enforced settings, and the plan-reuse signature.  Pure Python, no slicer / GPU imports.
++Kept out of mkm_accounting.py / plate_all.py main() so the call sites stay one small hook each."""
++import hashlib, os
++
++import mkm_accounting as MA
++
++
++def accounting_gate(pieces_json, planner_out):
++    """G2: one decision for both entry points -> (ok, line, problems).  'NOT CHECKED' is a refusal; MKM_ALLOW_UNACCOUNTED=1 skips only that case for one run
++    and the line says so.  It never skips a real accounting failure when a pieces.json exists."""
++    if not pieces_json:
++        if os.environ.get("MKM_ALLOW_UNACCOUNTED") == "1":
++            return True, "model accounting: NOT CHECKED (no pieces.json recorded) - ALLOWED by MKM_ALLOW_UNACCOUNTED=1 for this run only - UNPROVEN", []
++        return False, "model accounting: NOT CHECKED (no pieces.json recorded for this planner output): REFUSED; re-plan from pieces.json or set MKM_ALLOW_UNACCOUNTED=1 for this run", ["no pieces.json recorded for this planner output"]
++    probs = MA.model_accounting(pieces_json, planner_out)
++    if probs:
++        return False, "model accounting FAILED (%d problems)" % len(probs), probs
++    return True, "model accounting: every model in %s is placed or carried, none both, no failed plate" % os.path.basename(pieces_json), []
++
++
++def settings_problems(planner_out, edge_mm, gap_mm, fill_min):
++    """G3: the settings the planner REALLY used (its hard_checks.json) must not be weaker than the configured ones, and every plate must meet its own fill minimum.
++    fill_min is a fraction (0.68); 0 skips only the fill part.  -> list of problems ([] = ok)."""
++    out = []
++    eff = MA.effective_settings(planner_out)["plates"]
++    if not eff:
++        return ["no P*/hard_checks.json under the planner output: the settings it used are unknown"]
++    for p, v in sorted(eff.items()):
++        if v.get("edge_need_mm") is None or float(v["edge_need_mm"]) + 1e-9 < float(edge_mm):
++            out.append("%s: planner edge margin %s mm < configured %.1f mm" % (p, v.get("edge_need_mm"), float(edge_mm)))
++        r = MA._jload(os.path.join(os.path.abspath(planner_out), p, "hard_checks.json"), {}) or {}
++        if r.get("gap_need_mm") is None or abs(float(r["gap_need_mm"]) - float(gap_mm)) > 1e-6:
++            out.append("%s: planner gap %s mm != configured %.1f mm" % (p, r.get("gap_need_mm"), float(gap_mm)))
++        if float(fill_min) > 0:
++            if v.get("fill_min_pct") is None or float(v["fill_min_pct"]) + 1e-6 < 100.0 * float(fill_min):
++                out.append("%s: planner fill minimum %s%% < configured %.1f%% (stale or pre-R14 plan?)" % (p, v.get("fill_min_pct"), 100.0 * float(fill_min)))
++            elif v.get("fp_pct") is None or float(v["fp_pct"]) + 1e-6 < float(v["fill_min_pct"]):
++                out.append("%s: real footprint %s%% is under its own minimum %s%% (the fill veto did not hold)" % (p, v.get("fp_pct"), v["fill_min_pct"]))
++    return out
++
++
++def plan_signature(pieces, fill_min, edge_mm, gap_mm, layer_mm):
++    """G4: what a saved PLAN_RESULT must match to be reused: the pieces file (path + sha256 of its bytes) and the plan settings."""
++    with open(pieces, "rb") as fh:
++        sha = hashlib.sha256(fh.read()).hexdigest()
++    return dict(pieces=os.path.normcase(os.path.abspath(pieces)), pieces_sha256=sha, fill_min=float(fill_min), edge_mm=float(edge_mm), gap_mm=float(gap_mm), layer_mm=float(layer_mm))
+diff --git a/v3/mkm_plan.py b/v3/mkm_plan.py
+index 1700d2f..d3ae229 100644
+--- a/v3/mkm_plan.py
++++ b/v3/mkm_plan.py
+@@ -165,12 +165,15 @@ def plan(pieces, out_dir, n_start=None, n_max=None, gate=False, deadline=None):
+     out_dir = os.path.abspath(out_dir)
+     os.makedirs(out_dir, exist_ok=True)
+     rp = os.path.join(out_dir, "PLAN_RESULT.json")
++    import mkm_accounting_gate as _G      # G4: a saved plan is reused only if the pieces bytes AND the plan settings (fill minimum, edge, gap, layer) match
++    sig = _G.plan_signature(pieces, os.environ.get("MKM_FILL_MIN", C.FILL_MIN), C.EDGE_MARGIN_MM, C.GAP_MM, C.LAYER_MM)
+     if os.path.exists(rp):
+         r = json.load(open(rp, encoding="utf-8"))
+         if (accepted(r) and r.get("out") and not hard_fails_in(r["out"])
+-                and os.path.normcase(os.path.abspath(r.get("pieces", ""))) == os.path.normcase(os.path.abspath(pieces))):
++                and os.path.normcase(os.path.abspath(r.get("pieces", ""))) == os.path.normcase(os.path.abspath(pieces))
++                and r.get("signature") == sig):
+             return r
+-    r = _one(pieces, out_dir, n_start, gate, deadline)      # n_start None = the plate count is taken from the math by the planner
++    r = _one(pieces, out_dir, n_start, gate, deadline); r["signature"] = sig      # n_start None = the plate count is taken from the math by the planner
+     n_math = r.get("n_math") or r["n"] or 1
+     tries = [r]
+     json.dump(r, open(rp, "w", encoding="utf-8"), indent=1)
+@@ -180,7 +183,7 @@ def plan(pieces, out_dir, n_start=None, n_max=None, gate=False, deadline=None):
+         if n > n_cap:
+             raise RuntimeError("planner could not place every piece without a hard-check failure up to %d plates (math said %d); last run: carried %s, hard_fail %s; see %s" % (
+                 n_cap, n_math, r["carried"], r["hard_fail"][:2], out_dir))
+-        r = _one(pieces, out_dir, n, gate, deadline); r["n_math"] = n_math; tries.append(r)
++        r = _one(pieces, out_dir, n, gate, deadline); r["n_math"] = n_math; r["signature"] = sig; tries.append(r)
+         json.dump(r, open(rp, "w", encoding="utf-8"), indent=1)
+     r["n_math"] = n_math; r["tries"] = [(t["n"], t["carried"], len(t["hard_fail"])) for t in tries]
+     json.dump(r, open(rp, "w", encoding="utf-8"), indent=1)
+diff --git a/v3/plate_all.py b/v3/plate_all.py
+index df95d1d..40e4d2e 100644
+--- a/v3/plate_all.py
++++ b/v3/plate_all.py
+@@ -504,14 +504,12 @@ def main(argv=None):
+     import mkm_accounting
+     _pj = ((pr_.get("pieces") if "pr_" in locals() else None)
+            or mkm_accounting.pieces_file_for(a.planner_out) or a.pieces)      # case-on: the planned inventory (composites), not the naked paths
+-    if _pj:
+-        _acc = mkm_accounting.model_accounting(_pj, a.planner_out)
+-        if _acc:
+-            os.makedirs(run, exist_ok=True); json.dump(_acc, open(os.path.join(run, "REFUSED_ACCOUNTING.json"), "w"), indent=1)
+-            log(run, "REFUSED: model accounting failed (%d problems): %s. Nothing was sliced." % (len(_acc), "; ".join(_acc[:3])[:400])); return 3
+-        _acc_line = "model accounting: every model in %s is placed or carried, none both, no failed plate" % os.path.basename(_pj)
+-    else:
+-        _acc_line = "model accounting: NOT CHECKED (no pieces.json recorded for this planner output) - UNPROVEN"
++    import mkm_accounting_gate as _G      # G2 (NOT CHECKED is a refusal) + G3 (edge / gap / fill minimum enforced, not only logged)
++    _ok, _acc_line, _acc = _G.accounting_gate(_pj, a.planner_out)
++    _acc = list(_acc) + _G.settings_problems(a.planner_out, C.EDGE_MARGIN_MM, C.GAP_MM, float(os.environ.get("MKM_FILL_MIN", C.FILL_MIN)))
++    if _acc:
++        os.makedirs(run, exist_ok=True); json.dump(_acc, open(os.path.join(run, "REFUSED_ACCOUNTING.json"), "w"), indent=1)
++        log(run, "REFUSED: %s / settings check (%d problems): %s. Nothing was sliced." % (_acc_line, len(_acc), "; ".join(_acc[:3])[:400])); return 3
+     log(run, _acc_line)
+     import mkm_plate_slice, mkm_pm7m_build, mkm_uv_check, mkm_uv_repair, mkm_gpu_detect, mkm_gpu_repair, mkm_rate, mkm_rate_px
+     layout = os.path.join(run, "layout")
+diff --git a/v3/plate_batch.py b/v3/plate_batch.py
+index 4e57509..87e28dc 100644
+--- a/v3/plate_batch.py
++++ b/v3/plate_batch.py
+@@ -185,13 +185,11 @@ def main(argv=None):
+     if _bad:
+         PA.log(run, "batch: REFUSED, the plan carries a hard-check failure: " + "; ".join("%s %s" % (p_, "; ".join(r_)[:100]) for p_, r_ in _bad[:4])); return 3
+     _pj = pieces_src if pieces_src else mkm_accounting.pieces_file_for(layout_src)
+-    if _pj:
+-        _acc = mkm_accounting.model_accounting(_pj, layout_src)
+-        if _acc:
+-            PA.log(run, "batch: REFUSED, model accounting failed (%d problems): %s" % (len(_acc), "; ".join(_acc[:3])[:400])); return 3
+-        _acc_line = "model accounting: every model in %s is placed or carried, none both, no failed plate" % os.path.basename(_pj)
+-    else:
+-        _acc_line = "model accounting: NOT CHECKED (no pieces.json recorded for this planner output) - UNPROVEN"
++    import mkm_accounting_gate as _G      # G2 (NOT CHECKED is a refusal) + G3 (edge / gap / fill minimum enforced, not only logged)
++    _ok, _acc_line, _acc = _G.accounting_gate(_pj, layout_src)
++    _acc = list(_acc) + _G.settings_problems(layout_src, C.EDGE_MARGIN_MM, C.GAP_MM, float(os.environ.get("MKM_FILL_MIN", C.FILL_MIN)))
++    if _acc:
++        PA.log(run, "batch: REFUSED, %s / settings check (%d problems): %s" % (_acc_line, len(_acc), "; ".join(_acc[:3])[:400])); return 3
+     PA.log(run, "batch: " + _acc_line)
+     _hold = r"F:\MKM_STAGE\MKM_GATE\HOLD_plater_tests.txt"
+     if use_gate and os.path.exists(_hold):      # R13 (verifier R10 small #2): the resume path (an existing planner folder) says HOLD too, not "Pn FAILED (worker exit 3)"
