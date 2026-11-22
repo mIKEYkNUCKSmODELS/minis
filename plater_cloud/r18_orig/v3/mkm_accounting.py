@@ -1,0 +1,95 @@
+"""R14 (Mike 21:59 consensus answer): model accounting + the run's effective settings.  Read-only on every planner file.
+
+model_accounting(pieces_json, planner_out) -> list of problems ([] = every model accounted for):
+  1. every pieces.json source path is PLACED (in a P*/recipe.json source) or CARRIED (POOL_CARRY.json by path, LONE_CARRY.json by set+file);
+  2. no source is both placed and carried;
+  3. BED_FAILURES.json: failed == [];
+  4. the number of P* folders that hold a recipe equals the number of plates the planner says it wrote (BED_FAILURES.written);
+  5. no placed source that is not in pieces.json.
+Match is by normalised absolute path (a path may repeat only if the pieces list repeats it).  Nothing is guessed: a missing file is a problem, not a pass.
+
+effective_settings(planner_out) -> what the planner REALLY used, read from its own output (hard_checks.json footprint block), not from the config:
+  fill_min_pct per plate (R14 planner), edge margin need per plate (hard_checks), so a stale label ('0.5 mm', 'carry off') cannot hide.
+"""
+import glob, json, os
+
+
+def _norm(p):
+    import mkm_archive_io as AIO
+    return AIO.norm(p)
+
+
+def _jload(p, default=None):
+    try:
+        return json.load(open(p, encoding="utf-8-sig"))
+    except Exception:
+        return default
+
+
+def pieces_file_for(planner_out):
+    """the pieces.json a plan was made from, via PLAN_RESULT.json up to two folders above the planner output; None if it was never recorded."""
+    d = os.path.abspath(planner_out)
+    for _ in range(3):
+        rp = os.path.join(d, "PLAN_RESULT.json")
+        if os.path.isfile(rp):
+            pj = (_jload(rp, {}) or {}).get("pieces")
+            if pj and os.path.isfile(pj):
+                return pj
+        d = os.path.dirname(d)
+    return None
+
+
+def model_accounting(pieces_json, planner_out):
+    problems = []
+    pieces = _jload(pieces_json)
+    if not isinstance(pieces, list):
+        return ["pieces.json unreadable or not a list: %s" % pieces_json]
+    planner_out = os.path.abspath(planner_out)
+    placed, plate_dirs = set(), []
+    for rp in sorted(glob.glob(os.path.join(planner_out, "P*", "recipe.json"))):
+        plate_dirs.append(os.path.dirname(rp))
+        for s in (_jload(rp, {}) or {}).get("sources") or []:
+            if s.get("path"):
+                placed.add(_norm(s["path"]))
+    carried_paths, carried_sf = set(), set()
+    for r in _jload(os.path.join(planner_out, "POOL_CARRY.json"), []) or []:
+        if r.get("path"):
+            carried_paths.add(_norm(r["path"]))
+    for r in _jload(os.path.join(planner_out, "LONE_CARRY.json"), []) or []:
+        carried_sf.add((str(r.get("set")), str(r.get("file"))))
+    known = set()
+    for r in pieces:
+        pth = _norm(r["path"]); known.add(pth); sf = (str(r.get("set")), str(r.get("file")))
+        isp, isc = pth in placed, (pth in carried_paths or sf in carried_sf)
+        if not isp and not isc:
+            problems.append("model not accounted for (neither placed nor carried): %s / %s" % (r.get("set"), r.get("file")))
+        if isp and isc:
+            problems.append("model both placed and carried: %s / %s" % (r.get("set"), r.get("file")))
+    for p in sorted(placed - known):
+        problems.append("placed source not in pieces.json: %s" % p)
+    bf = _jload(os.path.join(planner_out, "BED_FAILURES.json"))
+    if bf is None:
+        problems.append("BED_FAILURES.json missing or unreadable: the planner's write result is unknown")
+    else:
+        if bf.get("failed"):
+            problems.append("planner reports failed plates: %s" % "; ".join("P%s %s" % (x.get("bed"), str(x.get("reason"))[:80]) for x in bf["failed"]))
+        if len(plate_dirs) != len(bf.get("written") or []):
+            problems.append("%d plate folders with a recipe, but the planner says it wrote %d" % (len(plate_dirs), len(bf.get("written") or [])))
+    return problems
+
+
+def effective_settings(planner_out):
+    out = dict(plates={}, carried=sorted({"%s (%s)" % (r.get("set"), r.get("file")) for r in (_jload(os.path.join(os.path.abspath(planner_out), "POOL_CARRY.json"), []) or [])}))
+    for hc in sorted(glob.glob(os.path.join(os.path.abspath(planner_out), "P*", "hard_checks.json"))):
+        r = _jload(hc, {}) or {}; fp = r.get("footprint") or {}
+        out["plates"][os.path.basename(os.path.dirname(hc))] = dict(fp_pct=fp.get("fp_pct"), fill_min_pct=fp.get("fill_min_pct"), at_geometry_limit=fp.get("at_geometry_limit"), why=fp.get("why"),
+                                                                    min_margin_mm=r.get("min_margin_mm"), edge_need_mm=r.get("edge_need_mm"))
+    return out
+
+
+def case_mode():
+    """R17 (verifier R16 blocker 4): the protective-case mode of THIS run, read from the same variable the case code reads (MKM_CASE_MODE, default 'on').  -> dict(mode, label)."""
+    m = os.environ.get("MKM_CASE_MODE", "on").lower()
+    if m == "off":
+        return dict(mode="off", label="CASE=OFF: the models' own files are plated, no protective case and no case raft (A/B test run)")
+    return dict(mode=m, label="CASE=%s: the protective case + raft is applied to every model (must be certified before layout)" % m.upper())
